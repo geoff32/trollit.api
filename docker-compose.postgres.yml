@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_database_trollit:/var/lib/postgresql/data/trollit:Z
+      - ./postgressql/init:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_WEBAPI_USER: ${POSTGRES_WEBAPI_USER}
+      POSTGRES_WEBAPI_PASSWORD: ${POSTGRES_WEBAPI_PASSWORD}
+      POSTGRES_DB: trollit
+      PGDATA: /var/lib/postgresql/data/trollit
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: geoffroy.herb@hotmail.fr
+      PGADMIN_DEFAULT_PASSWORD: p455W0rd
+volumes:
+  postgres_database_trollit:
+    external: true

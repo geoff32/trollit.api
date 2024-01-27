@@ -1,15 +1,22 @@
 using TrollIt.Application.Account.Abstractions;
 using TrollIt.Application.Account.Models;
+using TrollIt.Domain.Accounts.Acl.Abstractions;
+using TrollIt.Domain.Accounts.Acl.Models;
+using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
 
 namespace TrollIt.Application.Account;
 
-internal class AccountService : IAccountService
+internal class AccountService(IAccountAcl accountAcl, IAccountRepository accountRepository) : IAccountService
 {
-    public Task<AccountResponse> CreateAccountAsync(CreateAccountRequest accountRequest)
+    public async Task<AccountResponse> CreateAccountAsync(CreateAccountRequest accountRequest)
     {
-        var account = new AccountResponse(Guid.NewGuid(), "Gérard", new(112729, "Gérard Manmalle O'Khrane"));
+        var trollDto = new TrollDto(accountRequest.TrollId, "Name", accountRequest.Token);
+        var accountDto = new AccountDto(Guid.NewGuid(), accountRequest.UserName, trollDto);
+        var account = accountAcl.ToAccount(accountDto, accountRequest.Password);
 
-        return Task.FromResult(account);
+        await accountRepository.CreateAccount(account);
+
+        return new AccountResponse(account);
     }
 
     public Task<AccountResponse> AuthenticateAsync(AuthenticateRequest authenticateRequest)

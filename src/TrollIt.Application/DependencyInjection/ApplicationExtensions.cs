@@ -1,7 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
 using TrollIt.Application.Account.DependencyInjection;
 
-namespace TrollIt.Application.DependencyInjection;
+namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ApplicationExtensions
 {
