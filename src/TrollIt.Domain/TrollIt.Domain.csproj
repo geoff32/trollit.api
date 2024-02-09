@@ -14,8 +14,4 @@
     <ProjectReference Include="..\Core.Exceptions\Core.Exceptions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Accounts/DependencyInjection/" />
-  </ItemGroup>
-
 </Project>

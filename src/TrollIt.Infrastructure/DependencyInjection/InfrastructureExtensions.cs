@@ -11,6 +11,11 @@ public static class InfrastructureExtensions
 
         services.AddNpgsqlDataSource(options.ConnectionString);
 
-        services.AddAccount();
+        services.AddMemoryCache();
+
+        services.AddFtp();
+
+        services.AddAccounts();
+        services.AddBestiaries();
     }
 }

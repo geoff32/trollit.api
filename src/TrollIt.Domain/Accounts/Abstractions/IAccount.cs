@@ -1,4 +1,6 @@
-﻿namespace TrollIt.Domain.Accounts.Abstractions;
+﻿using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+
+namespace TrollIt.Domain.Accounts.Abstractions;
 
 public interface IAccount
 {
@@ -6,4 +8,6 @@ public interface IAccount
     string Login { get; }
     IPassword Password { get; }
     ITroll Troll { get; }
+
+    bool ValidateCredentials(string password);
 }

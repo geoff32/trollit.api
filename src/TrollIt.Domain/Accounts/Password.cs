@@ -4,7 +4,7 @@ using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
 
 namespace TrollIt.Domain.Accounts;
 
-internal record class Password(IEnumerable<byte> Value) : IPassword
+internal record Password(IEnumerable<byte> value) : IPassword, IEquatable<IPassword>
 {
     public Password(string password, IPasswordEncryptor passwordEncryptor, string salt)
         : this(passwordEncryptor.Encrypt(password, salt))
@@ -14,4 +14,10 @@ internal record class Password(IEnumerable<byte> Value) : IPassword
             throw new DomainException<AccountsException>(AccountsException.InsecurePassword);
         }
     }
+
+    public IEnumerable<byte> Value { get; } = value;
+
+    public bool Equals(IPassword? other) => other != null && Value.SequenceEqual(other.Value);
+
+    public override int GetHashCode() => Value.GetHashCode();
 }
