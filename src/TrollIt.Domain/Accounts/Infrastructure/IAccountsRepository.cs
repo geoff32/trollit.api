@@ -1,8 +1,8 @@
 ﻿using TrollIt.Domain.Accounts.Abstractions;
 
-namespace TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+namespace TrollIt.Domain.Accounts.Infrastructure;
 
-public interface IAccountRepository
+public interface IAccountsRepository
 {
     Task CreateAccount(IAccount account);
     Task<IAccount?> GetAccount(Guid id);

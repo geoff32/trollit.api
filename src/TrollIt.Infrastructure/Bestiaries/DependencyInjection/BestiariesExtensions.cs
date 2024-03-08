@@ -1,4 +1,4 @@
-﻿using TrollIt.Domain.Bestiaries.Infrastructure.Abstractions;
+﻿using TrollIt.Domain.Bestiaries.Infrastructure;
 using TrollIt.Infrastructure;
 
 namespace Microsoft.Extensions.DependencyInjection;

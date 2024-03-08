@@ -4,15 +4,15 @@ namespace TrollIt.Infrastructure.Ftp.Readers.Errors;
 
 internal class PublicScriptErrorProvider : IPublicScriptErrorProvider
 {
-    public void EnsureContent(string content)
+    public void EnsureContent(string? content)
     {
-        if (HasError(content))
+        if (content != null && HasError(content))
         {
             throw new InfrastructureException<PublicScriptErrorCodes>(GetErrorCodes(content));
         }
     }
 
-    private bool HasError(string content) => content != null && content.StartsWith("Erreur");
+    private bool HasError(string content) => content.StartsWith("Erreur");
 
     private PublicScriptErrorCodes GetErrorCodes(string content)
     {

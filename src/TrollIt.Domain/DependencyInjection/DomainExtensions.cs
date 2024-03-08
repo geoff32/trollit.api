@@ -6,5 +6,6 @@ public static class DomainExtensions
     {
         services.AddAccount();
         services.AddBestiaries();
+        services.AddProfiles();
     }
 }

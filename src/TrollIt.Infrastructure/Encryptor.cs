@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+using TrollIt.Domain.Accounts.Infrastructure;
 
 namespace TrollIt.Infrastructure;
 

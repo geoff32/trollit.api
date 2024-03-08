@@ -6,10 +6,10 @@ using TrollIt.Infrastructure.Accounts.Models;
 
 namespace TrollIt.Infrastructure.Accounts.Acl;
 
-internal class AccountRepositoryAcl(IAccountAcl accountAcl) : IAccountRepositoryAcl
+internal class AccountRepositoryAcl(IAccountsAcl accountAcl) : IAccountRepositoryAcl
 {
     public IAccount? ToDomain(Account? account)
-        => account == null ? null : accountAcl.ToAccount(
+        => account == null ? null : accountAcl.ToDomain(
             new AccountDto(account.Id, account.Login, new TrollDto(account.TrollId, account.TrollName, account.ScriptToken)),
             account.Password);
 }

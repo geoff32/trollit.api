@@ -3,10 +3,10 @@ using TrollIt.Domain.Accounts.Acl.Abstractions;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
-internal static class AccountExtensions
+internal static class AccountsExtensions
 {
     public static void AddAccount(this IServiceCollection services)
     {
-        services.AddSingleton<IAccountAcl, AccountAcl>();
+        services.AddSingleton<IAccountsAcl, AccountsAcl>();
     }
 }

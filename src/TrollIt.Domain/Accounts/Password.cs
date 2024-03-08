@@ -1,6 +1,6 @@
 ﻿using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Exceptions;
-using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+using TrollIt.Domain.Accounts.Infrastructure;
 
 namespace TrollIt.Domain.Accounts;
 

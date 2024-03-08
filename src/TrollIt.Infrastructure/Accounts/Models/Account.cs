@@ -2,7 +2,7 @@
 
 namespace TrollIt.Infrastructure.Accounts.Models;
 
-internal record class Account
+internal record Account
 (
     [PgName("id")]
     Guid Id,

@@ -2,13 +2,13 @@
 using Dapper;
 using Npgsql;
 using TrollIt.Domain.Accounts.Abstractions;
-using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Infrastructure.Accounts.Acl.Abstractions;
 using TrollIt.Infrastructure.Accounts.Models;
 
 namespace TrollIt.Infrastructure.Accounts;
 
-internal class AccountRepository(NpgsqlDataSource dataSource, IAccountRepositoryAcl accountRepositoryAcl) : IAccountRepository
+internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountRepositoryAcl accountRepositoryAcl) : IAccountsRepository
 {
     public async Task CreateAccount(IAccount account)
     {

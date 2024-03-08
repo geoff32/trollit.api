@@ -3,7 +3,7 @@ using TrollIt.Domain;
 using TrollIt.Domain.Bestiaries.Abstractions;
 using TrollIt.Domain.Bestiaries.Acl.Abstractions;
 using TrollIt.Domain.Bestiaries.Acl.Models;
-using TrollIt.Domain.Bestiaries.Infrastructure.Abstractions;
+using TrollIt.Domain.Bestiaries.Infrastructure;
 using TrollIt.Infrastructure.Ftp;
 
 namespace TrollIt.Infrastructure;

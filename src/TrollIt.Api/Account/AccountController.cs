@@ -24,6 +24,7 @@ public class AccountController : ControllerBase
     {
         var account = await  _accountService.CreateAccountAsync(createAccountRequest);
 
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, GetIdentity(account));
         return Ok(account);
     }
 

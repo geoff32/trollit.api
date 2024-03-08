@@ -1,4 +1,4 @@
-﻿using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+﻿using TrollIt.Domain.Accounts.Infrastructure;
 
 namespace TrollIt.Domain.Accounts.Abstractions;
 

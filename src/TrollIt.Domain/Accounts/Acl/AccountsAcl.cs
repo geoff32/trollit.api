@@ -1,15 +1,15 @@
 ﻿using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Acl.Abstractions;
 using TrollIt.Domain.Accounts.Acl.Models;
-using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+using TrollIt.Domain.Accounts.Infrastructure;
 
 namespace TrollIt.Domain.Accounts.Acl;
 
-internal class AccountAcl(IPasswordEncryptor passwordEncryptor) : IAccountAcl
+internal class AccountsAcl(IPasswordEncryptor passwordEncryptor) : IAccountsAcl
 {
-    public IAccount ToAccount(AccountDto accountDto, IEnumerable<byte> encryptedPassword)
+    public IAccount ToDomain(AccountDto accountDto, IEnumerable<byte> encryptedPassword)
         => new Account(accountDto, encryptedPassword, passwordEncryptor);
 
-    public IAccount ToAccount(AccountDto accountDto, string password)
+    public IAccount ToDomain(AccountDto accountDto, string password)
         => new Account(accountDto, password, passwordEncryptor);
 }

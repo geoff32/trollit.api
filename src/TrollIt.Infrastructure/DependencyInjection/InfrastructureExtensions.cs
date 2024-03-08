@@ -1,4 +1,5 @@
-﻿using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
+﻿using Npgsql;
+using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Infrastructure;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,10 @@ public static class InfrastructureExtensions
     {
         services.AddSingleton<IPasswordEncryptor, Encryptor>();
 
-        services.AddNpgsqlDataSource(options.ConnectionString);
+        services.AddNpgsqlDataSource(options.ConnectionString, builder =>
+        {
+            builder.MapProfiles();
+        });
 
         services.AddMemoryCache();
 
@@ -17,5 +21,6 @@ public static class InfrastructureExtensions
 
         services.AddAccounts();
         services.AddBestiaries();
+        services.AddProfiles();
     }
 }

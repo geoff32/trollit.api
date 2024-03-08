@@ -1,3 +1,3 @@
 ﻿namespace TrollIt.Infrastructure;
 
-public record class InfrastructureOptions(string ConnectionString);
+public record InfrastructureOptions(string ConnectionString);

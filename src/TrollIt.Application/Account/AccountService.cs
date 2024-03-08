@@ -2,12 +2,13 @@ using TrollIt.Application.Account.Abstractions;
 using TrollIt.Application.Account.Models;
 using TrollIt.Domain.Accounts.Acl.Abstractions;
 using TrollIt.Domain.Accounts.Acl.Models;
-using TrollIt.Domain.Accounts.Infrastructure.Abstractions;
-using TrollIt.Domain.Bestiaries.Infrastructure.Abstractions;
+using TrollIt.Domain.Accounts.Infrastructure;
+using TrollIt.Domain.Bestiaries.Infrastructure;
+using TrollIt.Domain.Profiles.Infrastructure;
 
 namespace TrollIt.Application.Account;
 
-internal class AccountService(IAccountAcl accountAcl, IAccountRepository accountRepository, ITrollBestiary trollBestiary)
+internal class AccountService(IAccountsAcl accountAcl, IAccountsRepository accountsRepository, ITrollBestiary trollBestiary, IProfilesRepository profilesRepository)
     : IAccountService
 {
     public async Task<AccountResponse> CreateAccountAsync(CreateAccountRequest accountRequest)
@@ -17,16 +18,18 @@ internal class AccountService(IAccountAcl accountAcl, IAccountRepository account
 
         var trollDto = new TrollDto(accountRequest.TrollId, trollInfos.Name, accountRequest.Token);
         var accountDto = new AccountDto(Guid.NewGuid(), accountRequest.UserName, trollDto);
-        var account = accountAcl.ToAccount(accountDto, accountRequest.Password);
+        var account = accountAcl.ToDomain(accountDto, accountRequest.Password);
 
-        await accountRepository.CreateAccount(account);
+        await profilesRepository.RefreshProfileAsync(account.Troll.Id, account.Troll.ScriptToken);
+
+        await accountsRepository.CreateAccount(account);
 
         return new AccountResponse(account);
     }
 
     public async Task<AccountResponse?> AuthenticateAsync(AuthenticateRequest authenticateRequest)
     {
-        var account = await accountRepository.GetAccountByLogin(authenticateRequest.UserName);
+        var account = await accountsRepository.GetAccountByLogin(authenticateRequest.UserName);
 
         if (account == null)
         {
@@ -38,7 +41,7 @@ internal class AccountService(IAccountAcl accountAcl, IAccountRepository account
 
     public async Task<AccountResponse> GetAccountAsync(Guid accountId)
     {
-        var account = await accountRepository.GetAccount(accountId);
+        var account = await accountsRepository.GetAccount(accountId);
 
         return account == null
             ? throw new AppException<AccountExceptions>(AccountExceptions.AccountNotFound)
