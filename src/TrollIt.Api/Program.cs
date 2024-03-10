@@ -1,8 +1,13 @@
-using System.Data.Common;
+using Serilog;
 using TrollIt.Api.Account.DependencyInjection;
 using TrollIt.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((context, services, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console());
 
 // Add services to the container.
 
