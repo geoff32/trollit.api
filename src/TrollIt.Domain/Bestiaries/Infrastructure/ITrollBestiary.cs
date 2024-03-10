@@ -4,5 +4,5 @@ namespace TrollIt.Domain.Bestiaries.Infrastructure;
 
 public interface ITrollBestiary
 {
-    Task<ITroll?> GetTroll(int id);
+    Task<ITroll?> GetTrollAsync(int id);
 }

@@ -3,32 +3,6 @@ set -e
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
     BEGIN;
-        CREATE TYPE app.scripttypes AS ENUM (
-            'profile',
-            'effect',
-            'view',
-            'equipment'
-        );
-
-        CREATE TABLE app.scriptcategories (
-            id UUID PRIMARY KEY,
-            name VARCHAR(20) NOT NULL,
-            calllimit INT NOT NULL
-        );
-
-        CREATE TABLE app.scriptinfos (
-            id UUID PRIMARY KEY,
-            script VARCHAR(100) NOT NULL,
-            type app.scripttypes NOT NULL,
-            categoryid UUID NOT NULL REFERENCES app.scriptcategories(id),
-            UNIQUE(script)
-        );
-
-        CREATE TABLE app.scriptshistory (
-            id UUID NOT NULL REFERENCES app.scriptinfos(id),
-            trollid INT NOT NULL,
-            date TIMESTAMPTZ NOT NULL
-        );
 
         CREATE TYPE app.attributes AS ENUM (
             'vitality',
@@ -88,18 +62,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
             level INT,
             profile app.profile
         );
-
-        CREATE OR REPLACE PROCEDURE app.add_scriptshistory(pTrollId INT, pScript VARCHAR(100), pDate TIMESTAMPTZ)
-        LANGUAGE plpgsql AS
-        \$\$
-        BEGIN
-            INSERT INTO app.scriptshistory
-            (id, trollid, date)
-            SELECT s.id, pTrollId, pDate
-            FROM app.scriptinfos s
-            WHERE s.script = pScript;
-        END
-        \$\$ SECURITY DEFINER;
 
         CREATE OR REPLACE FUNCTION app.get_attribute(pId INT, pAttribute app.attributes)
         RETURNS app.attribute AS
@@ -163,19 +125,5 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
             CALL app.refresh_attribute(pTroll.id, 'turn', v_profile.turnduration);
         END
         \$\$ SECURITY DEFINER;
-        
-        INSERT INTO app.scriptcategories
-            (id, name, calllimit)
-        VALUES
-            ('99879c6e-4162-4495-81e7-e12d14c012c3', 'Scripts dynamiques', 24),
-            ('204cb063-0265-49e4-bd77-3cd2ff7d50d6', 'Scripts statiques', 10);
-        
-        INSERT INTO app.scriptinfos
-            (id, script, type, categoryid)
-        VALUES
-            ('d786bbb7-c056-41ff-9e02-d13799b21eae', '/SP_Profil4.php', 'profile', '99879c6e-4162-4495-81e7-e12d14c012c3'),
-            ('b9c1253a-3d8b-4cd1-b6da-6a096aa7c9e4', '/SP_Bonusmalus.php', 'effect', '99879c6e-4162-4495-81e7-e12d14c012c3'),
-            ('488f62db-3a87-441f-8507-4d56b658d90b', '/SP_Vue2.php', 'view', '99879c6e-4162-4495-81e7-e12d14c012c3'),
-            ('876a46c8-06d6-4dee-9826-c2046157e4a0', '/SP_Equipement.php', 'equipment', '204cb063-0265-49e4-bd77-3cd2ff7d50d6');
     COMMIT;
 EOSQL

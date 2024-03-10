@@ -1,39 +1,30 @@
 ﻿using NpgsqlTypes;
-using TrollIt.Infrastructure.Profiles.Scripts.Models;
+using TrollIt.Infrastructure.Mountyhall.Models.Profile;
 
 namespace TrollIt.Infrastructure.Profiles.Models;
 
 internal record Profile
 (
-        [PgName("vitality")]
-        Attribute Vitality,
-
-        [PgName("view")]
-        Attribute View,
-
-        [PgName("attack")]
-        Attribute Attack,
-
-        [PgName("dodge")]
-        Attribute Dodge,
-
-        [PgName("damage")]
-        Attribute Damage,
-
-        [PgName("regeneration")]
-        Attribute Regeneration,
-
-        [PgName("armor")]
-        Attribute Armor,
-
-        [PgName("magicmastery")]
-        Attribute Magicmastery,
-
-        [PgName("magicresistance")]
-        Attribute Magicresistance,
-
-        [PgName("turnduration")]
-        Attribute Turnduration
+    [PgName("vitality")]
+    Attribute Vitality,
+    [PgName("view")]
+    Attribute View,
+    [PgName("attack")]
+    Attribute Attack,
+    [PgName("dodge")]
+    Attribute Dodge,
+    [PgName("damage")]
+    Attribute Damage,
+    [PgName("regeneration")]
+    Attribute Regeneration,
+    [PgName("armor")]
+    Attribute Armor,
+    [PgName("magicmastery")]
+    Attribute Magicmastery,
+    [PgName("magicresistance")]
+    Attribute Magicresistance,
+    [PgName("turnduration")]
+    Attribute Turnduration
 )
 {
     public Profile(Caracs caracs)

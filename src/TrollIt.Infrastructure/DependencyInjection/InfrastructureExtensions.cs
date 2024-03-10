@@ -13,14 +13,16 @@ public static class InfrastructureExtensions
         services.AddNpgsqlDataSource(options.ConnectionString, builder =>
         {
             builder.MapProfiles();
+            builder.MapScripts();
         });
 
         services.AddMemoryCache();
 
-        services.AddFtp();
+        services.AddMountyhall();
 
         services.AddAccounts();
         services.AddBestiaries();
         services.AddProfiles();
+        services.AddScripts();
     }
 }

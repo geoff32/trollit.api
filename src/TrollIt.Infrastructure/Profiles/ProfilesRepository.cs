@@ -2,76 +2,58 @@
 using Dapper;
 using Npgsql;
 using TrollIt.Domain.Profiles.Abstractions;
-using TrollIt.Domain.Profiles.Acl.Abstractions;
-using TrollIt.Domain.Profiles.Acl.Models;
 using TrollIt.Domain.Profiles.Infrastructure;
+using TrollIt.Infrastructure.Mountyhall;
 using TrollIt.Infrastructure.Npgsql;
-using TrollIt.Infrastructure.Profiles.Scripts;
-using TrollIt.Infrastructure.Profiles.Scripts.Models;
+using TrollIt.Infrastructure.Profiles.Acl.Abstractions;
 
 namespace TrollIt.Infrastructure.Profiles;
 
-internal class ProfilesRepository(NpgsqlDataSource dataSource, IJsonScripts jsonScripts, IProfilesAcl profilesAcl) : IProfilesRepository
+internal class ProfilesRepository
+(
+    NpgsqlDataSource dataSource,
+    IJsonScripts jsonScripts,
+    IProfilesRepositoryAcl profilesRepositoryAcl
+) : IProfilesRepository
 {
-    public Task<IProfile> GetProfileAsync(int trollId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IProfile> RefreshProfileAsync(int trollId, string token)
-    {
-        var profile = await jsonScripts.ProfileAsync(trollId, token);
-
-        await RefreshTrollAsync(dataSource, new Models.Troll(profile.Troll, profile.Caracs));
-
-        var profileDto = new ProfileDto
-        (
-            TrollId: profile.Troll.Id,
-            TurnDuration: GetDuration(profile.Caracs.Dla),
-            Vitality: GetValueAttribute(profile.Caracs.PvMax),
-            View: GetValueAttribute(profile.Caracs.Vue),
-            Attack: GetDiceAttribute(profile.Caracs.Att),
-            Dodge: GetDiceAttribute(profile.Caracs.Esq),
-            Damage: GetDiceAttribute(profile.Caracs.Deg),
-            Armor: GetDiceAttribute(profile.Caracs.Arm),
-            Regeneration: GetDiceAttribute(profile.Caracs.Reg),
-            MagicMastery: GetValueAttribute(profile.Caracs.Mm),
-            MagicResistance: GetValueAttribute(profile.Caracs.Rm)
-        );
-
-        return profilesAcl.ToDomain(profileDto);
-    }
-
-    private static async Task RefreshTrollAsync(NpgsqlDataSource dataSource, Models.Troll troll)
+    public async Task<IProfile?> GetProfileAsync(int trollId, CancellationToken cancellationToken)
     {
         var connection = dataSource.CreateConnection();
         await connection.OpenAsync();
 
-        await connection.ExecuteAsync
-        (
-            "app.refresh_troll",
-            new
-            {
-                ptroll = new CustomTypeParameter<Models.Troll>(troll, "app.troll")
-            },
-            commandType: CommandType.StoredProcedure
-        );
+        var data = await connection.QuerySingleOrDefaultAsync<Models.Troll>(
+            "SELECT * FROM app.get_troll(@pTrollId)",
+            new { ptrollid = trollId },
+            commandType: CommandType.Text);
+
+        return profilesRepositoryAcl.ToDomain(data);
     }
 
-    private static DiceAttributeDto GetDiceAttribute(Carac carac) =>
-        new(Value: (int)carac.Car, BonusMalus: new BonusMalusDto(Physical: (int)carac.Bmp, Magical: (int)carac.Bmm));
+    public async Task<IProfile> RefreshProfileAsync(int trollId, string token, CancellationToken cancellationToken)
+    {
+        var profile = await jsonScripts.ProfileAsync(trollId, token, cancellationToken);
 
-    private static ValueAttributeDto GetValueAttribute(Carac carac) =>
-        new(Value: (int)carac.Car, BonusMalus: new BonusMalusDto(Physical: (int)carac.Bmp, Magical: (int)carac.Bmm));
+        await RefreshTrollAsync(dataSource, new Models.Troll(profile.Troll, profile.Caracs), cancellationToken);
 
-    private static ValueAttributeDto<TimeSpan> GetDuration(Carac carac) =>
-        new
+        return profilesRepositoryAcl.ToDomain(profile);
+    }
+
+    private static async Task RefreshTrollAsync(NpgsqlDataSource dataSource, Models.Troll troll, CancellationToken cancellationToken)
+    {
+        var connection = dataSource.CreateConnection();
+        await connection.OpenAsync(cancellationToken);
+
+        await connection.ExecuteAsync
         (
-            Value: TimeSpan.FromMinutes((int)carac.Car),
-            BonusMalus: new BonusMalusDto<TimeSpan>
-            (
-                Physical: TimeSpan.FromMinutes((int)carac.Bmp),
-                Magical: TimeSpan.FromMinutes((int)carac.Bmm)
+            new CommandDefinition(
+                "app.refresh_troll",
+                new
+                {
+                    ptroll = new CustomTypeParameter<Models.Troll>(troll, "app.troll")
+                },
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
             )
         );
+    }
 }

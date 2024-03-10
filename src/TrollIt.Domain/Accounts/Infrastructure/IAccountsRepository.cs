@@ -4,7 +4,7 @@ namespace TrollIt.Domain.Accounts.Infrastructure;
 
 public interface IAccountsRepository
 {
-    Task CreateAccount(IAccount account);
-    Task<IAccount?> GetAccount(Guid id);
-    Task<IAccount?> GetAccountByLogin(string login);
+    Task CreateAccountAsync(IAccount account, CancellationToken cancellationToken);
+    Task<IAccount?> GetAccountAsync(Guid id, CancellationToken cancellationToken);
+    Task<IAccount?> GetAccountByLoginAsync(string login, CancellationToken cancellationToken);
 }

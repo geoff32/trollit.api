@@ -1,30 +1,25 @@
 ﻿using NpgsqlTypes;
+using TrollIt.Infrastructure.Mountyhall.Models.Profile;
 
 namespace TrollIt.Infrastructure.Profiles.Models;
 
 internal record Troll
 (
-
-        [PgName("id")]
-        int Id,
-
-        [PgName("name")]
-        string Name,
-
-        [PgName("breed")]
-        string Breed,
-
-        [PgName("shortbreed")]
-        string Shortbreed,
-
-        [PgName("level")]
-        int Level,
-
-        [PgName("profile")]
-        Profile Profile
+    [PgName("id")]
+    int Id,
+    [PgName("name")]
+    string Name,
+    [PgName("breed")]
+    string Breed,
+    [PgName("shortbreed")]
+    string Shortbreed,
+    [PgName("level")]
+    int Level,
+    [PgName("profile")]
+    Profile Profile
 )
 {
-    public Troll(Scripts.Models.Troll troll, Scripts.Models.Caracs caracs)
+    public Troll(Mountyhall.Models.Profile.Troll troll, Caracs caracs)
         : this
         (
             Id: troll.Id,
@@ -34,6 +29,6 @@ internal record Troll
             Level: troll.Niveau,
             Profile: new Profile(caracs))
     {
-        
+
     }
 }

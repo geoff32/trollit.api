@@ -9,7 +9,7 @@ internal static class AccountsExtensions
 {
     public static void AddAccounts(this IServiceCollection services)
     {
-        services.AddSingleton<IAccountRepositoryAcl, AccountRepositoryAcl>();
+        services.AddSingleton<IAccountsRepositoryAcl, AccountsRepositoryAcl>();
         services.AddSingleton<IAccountsRepository, AccountsRepository>();
     }
 }

@@ -2,12 +2,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TrollIt.Domain\TrollIt.Domain.csproj" />
+    <ProjectReference Include="..\TrollIt.Application\TrollIt.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
     <PackageReference Include="Npgsql" Version="8.0.1" />
     <PackageReference Include="Npgsql.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Refit.HttpClientFactory" Version="7.0.0" />
@@ -15,8 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Accounts/Models/" />
-    <Folder Include="Ftp/Readers/" />
-    <Folder Include="Ftp/Readers/Abstractions/" />
   </ItemGroup>
 
   <PropertyGroup>

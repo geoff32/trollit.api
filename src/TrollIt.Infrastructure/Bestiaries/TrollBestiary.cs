@@ -4,13 +4,13 @@ using TrollIt.Domain.Bestiaries.Abstractions;
 using TrollIt.Domain.Bestiaries.Acl.Abstractions;
 using TrollIt.Domain.Bestiaries.Acl.Models;
 using TrollIt.Domain.Bestiaries.Infrastructure;
-using TrollIt.Infrastructure.Ftp;
+using TrollIt.Infrastructure.Mountyhall;
 
 namespace TrollIt.Infrastructure;
 
 internal class TrollBestiary(IFtpClient ftpClient, IBestiariesAcl bestiariesAcl, IMemoryCache memoryCache) : ITrollBestiary
 {
-    public async Task<ITroll?> GetTroll(int id)
+    public async Task<ITroll?> GetTrollAsync(int id)
     {
         var guilds = await memoryCache.GetOrCreateAsync("AllGuilds", async entry =>
         {
