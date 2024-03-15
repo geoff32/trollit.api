@@ -1,5 +1,6 @@
 using Serilog;
 using TrollIt.Api.Account.DependencyInjection;
+using TrollIt.Api.Exceptions;
 using TrollIt.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
     .Enrich.FromLogContext()
+    .Filter.With<ManagedExceptionLogEventFilter>()
     .WriteTo.Console());
 
 // Add services to the container.
@@ -23,14 +25,22 @@ builder.Services.AddApplication();
 var connectionString = builder.Configuration.GetConnectionString("postgres") ?? throw new ArgumentException("No connection found");
 builder.Services.AddInfrastructure(new InfrastructureOptions(connectionString));
 
-var app = builder.Build();
+builder.Services.AddPortableObjectLocalization();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+builder.Services
+    .Configure<RequestLocalizationOptions>(options => options
+        .AddSupportedCultures("fr")
+        .AddSupportedUICultures("fr"));
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ManagedExceptionErrorHandler>();
+
+var app = builder.Build();
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

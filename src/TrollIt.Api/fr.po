@@ -1,0 +1,58 @@
+msgid "Title error"
+msgstr "Erreur"
+
+msgctxt "TrollIt.Domain.Accounts.Exceptions.AccountsException"
+msgid "InsecurePassword"
+msgstr "Le mot de passe doit faire plus de 5 caractères !"
+
+msgctxt "TrollIt.Domain.Scripts.Exceptions.ScriptsExceptions"
+msgid "UnkownScript"
+msgstr "Script inconnu !"
+
+msgctxt "TrollIt.Domain.Scripts.Exceptions.ScriptsExceptions"
+msgid "MaxCallScript"
+msgstr "Limite d'appels à ce script atteinte !"
+
+msgctxt "TrollIt.Api.Account.AccountController"
+msgid "Invalid login or password"
+msgstr "Identifiant ou mot de passe invalide"
+
+msgctxt "TrollIt.Application.Accounts.Exceptions.AccountExceptions"
+msgid "AccountNotFound"
+msgstr "Compte inconnu"
+
+msgctxt "TrollIt.Application.Accounts.Exceptions.AccountExceptions"
+msgid "TrollUnknown"
+msgstr "Troll inconnu"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Exceptions.MountyhallExceptions"
+msgid "InvalidScript"
+msgstr "Script invalide"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "Unknown"
+msgstr "Script mountyhall : Erreur inconnue"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "IncorrectParameter"
+msgstr "Script mountyhall : Paramètre incorrect"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "UnknownTroll"
+msgstr "Script mountyhall : Troll inconnu"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "WrongPassword"
+msgstr "Script mountyhall : Mot de passe restreint incorrect"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "Maintenance"
+msgstr "Script mountyhall : Maintenance en cours"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "ScriptTemporarilyDisabled"
+msgstr "Script mountyhall : Temporairement désactivé"
+
+msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgid "PnjOrTrollDisabled"
+msgstr "Script mountyhall : PNJ ou troll inactif"

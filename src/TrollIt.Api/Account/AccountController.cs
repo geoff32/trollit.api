@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Localization;
 using TrollIt.Application.Accounts.Abstractions;
 using TrollIt.Application.Accounts.Models;
 
@@ -10,19 +12,12 @@ namespace TrollIt.Api.Account;
 
 [ApiController]
 [Route("api/account")]
-public class AccountController : ControllerBase
+public class AccountController(IAccountsService accountService, ProblemDetailsFactory problemDetailsFactory, IStringLocalizer<AccountController> stringLocalizer) : ControllerBase
 {
-    private readonly IAccountsService _accountService;
-
-    public AccountController(IAccountsService accountService)
-    {
-        _accountService = accountService;
-    }
-
     [HttpPost, AllowAnonymous]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateAccountRequest createAccountRequest, CancellationToken cancellationToken)
     {
-        var account = await  _accountService.CreateAccountAsync(createAccountRequest, cancellationToken);
+        var account = await  accountService.CreateAccountAsync(createAccountRequest, cancellationToken);
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, GetIdentity(account));
         return Ok(account);
@@ -31,7 +26,7 @@ public class AccountController : ControllerBase
     [HttpPost("validate"), Authorize]
     public async Task<IActionResult> ValidateAsync(CancellationToken cancellationToken)
     {
-        var account = await  _accountService.GetAccountAsync(Guid.Parse(User.Identity!.Name!), cancellationToken);
+        var account = await  accountService.GetAccountAsync(Guid.Parse(User.Identity!.Name!), cancellationToken);
 
         return Ok(account);
     }
@@ -39,11 +34,17 @@ public class AccountController : ControllerBase
     [HttpPost("signin"), AllowAnonymous]
     public async Task<IActionResult> SignInAsync(AuthenticateRequest authenticateRequest, CancellationToken cancellationToken)
     {
-        var account = await  _accountService.AuthenticateAsync(authenticateRequest, cancellationToken);
+        var account = await  accountService.AuthenticateAsync(authenticateRequest, cancellationToken);
 
         if (account == null)
         {
-            return Unauthorized(new { Message = "Identifiant ou mot de passe invalide" });
+            return Unauthorized(problemDetailsFactory.CreateProblemDetails
+            (
+                HttpContext,
+                statusCode: StatusCodes.Status401Unauthorized,
+                title: stringLocalizer["Title error"],
+                detail: stringLocalizer["Invalid login or password"]
+            ));
         }
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, GetIdentity(account));
