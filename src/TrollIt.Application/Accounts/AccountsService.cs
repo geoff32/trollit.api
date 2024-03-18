@@ -9,8 +9,14 @@ using TrollIt.Domain.Profiles.Infrastructure;
 
 namespace TrollIt.Application.Accounts;
 
-internal class AccountsService(IAccountsAcl accountAcl, IAccountsRepository accountsRepository, ITrollBestiary trollBestiary, IProfilesRepository profilesRepository)
-    : IAccountsService
+internal class AccountsService
+(
+    IAccountsAcl accountAcl,
+    IPasswordEncryptor passwordEncryptor,
+    IAccountsRepository accountsRepository,
+    ITrollBestiary trollBestiary,
+    IProfilesRepository profilesRepository
+) : IAccountsService
 {
     public async Task<AccountResponse> CreateAccountAsync(CreateAccountRequest accountRequest, CancellationToken cancellationToken)
     {
@@ -37,7 +43,10 @@ internal class AccountsService(IAccountsAcl accountAcl, IAccountsRepository acco
             return null;
         }
 
-        return account.ValidateCredentials(authenticateRequest.Password) ? new AccountResponse(account) : null;
+        var hashedPassword = passwordEncryptor.Encrypt(authenticateRequest.Password, account.GetSalt());
+        return account.ValidateCredentials(hashedPassword)
+            ? new AccountResponse(account)
+            : null;
     }
 
     public async Task<AccountResponse> GetAccountAsync(Guid accountId, CancellationToken cancellationToken)

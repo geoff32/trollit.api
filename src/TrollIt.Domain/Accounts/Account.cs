@@ -5,29 +5,26 @@ using TrollIt.Domain.Accounts.Infrastructure;
 
 namespace TrollIt.Domain.Accounts;
 
-internal class Account(Guid id, string login, IPassword password, ITroll troll, IPasswordEncryptor passwordEncryptor) : IAccount
+internal record Account(Guid Id, string Login, IPassword Password, ITroll Troll) : IAccount
 {
-    public Guid Id { get; } = id;
 
-    public string Login { get; } = login;
-
-    public IPassword Password { get; } = password;
-
-    public ITroll Troll { get; } = troll;
-
-    public Account(AccountDto accountDto, IEnumerable<byte> encryptedPassword, IPasswordEncryptor passwordEncryptor)
-        : this(accountDto.Id, accountDto.Login, new Password(encryptedPassword), new Troll(accountDto.Troll), passwordEncryptor)
+    public Account(AccountDto accountDto, IEnumerable<byte> encryptedPassword)
+        : this(accountDto.Id, accountDto.Login, new Password(encryptedPassword, GetSalt(accountDto)), new Troll(accountDto.Troll))
     {
     }
 
     public Account(AccountDto accountDto, string password, IPasswordEncryptor passwordEncryptor)
-        : this(accountDto.Id, accountDto.Login, EncryptPassword(accountDto, password, passwordEncryptor), new Troll(accountDto.Troll), passwordEncryptor)
+        : this(accountDto.Id, accountDto.Login, EncryptPassword(accountDto, password, passwordEncryptor), new Troll(accountDto.Troll))
     {
     }
 
-    public bool ValidateCredentials(string password)
-        => Password.Equals(new Password(password, passwordEncryptor, Id.ToString()));
+    public bool ValidateCredentials(IEnumerable<byte> hashedPassword)
+        => Password.Equals(new Password(hashedPassword, GetSalt()));
 
-    private static Password EncryptPassword(AccountDto accountDto, string password, IPasswordEncryptor passwordEncryptor)
-        => new Password(password, passwordEncryptor, accountDto.Id.ToString());
+    public string GetSalt() => Id.ToString();
+
+    private static Password EncryptPassword(AccountDto accountDto, string password, IPasswordEncryptor passwordEncryptor) =>
+        new(password, GetSalt(accountDto), passwordEncryptor);
+
+    private static string GetSalt(AccountDto accountDto) => accountDto.Id.ToString();
 }

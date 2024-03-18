@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core.Exceptions\Core.Exceptions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+  </ItemGroup>
 </Project>

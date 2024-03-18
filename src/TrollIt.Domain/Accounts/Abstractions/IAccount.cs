@@ -9,5 +9,7 @@ public interface IAccount
     IPassword Password { get; }
     ITroll Troll { get; }
 
-    bool ValidateCredentials(string password);
+    bool ValidateCredentials(IEnumerable<byte> hashedPassword);
+
+    string GetSalt();
 }

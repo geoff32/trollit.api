@@ -8,7 +8,7 @@ namespace TrollIt.Domain.Accounts.Acl;
 internal class AccountsAcl(IPasswordEncryptor passwordEncryptor) : IAccountsAcl
 {
     public IAccount ToDomain(AccountDto accountDto, IEnumerable<byte> encryptedPassword)
-        => new Account(accountDto, encryptedPassword, passwordEncryptor);
+        => new Account(accountDto, encryptedPassword);
 
     public IAccount ToDomain(AccountDto accountDto, string password)
         => new Account(accountDto, password, passwordEncryptor);
