@@ -4,7 +4,7 @@ public interface IBonusMalus : IBonusMalus<int>
 {
 }
 
-public interface IBonusMalus<T>
+public interface IBonusMalus<out T>
 {
     T Physical { get; }
     T Magical { get; }

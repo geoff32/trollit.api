@@ -5,6 +5,6 @@ namespace TrollIt.Application.Accounts.Abstractions;
 public interface IAccountsService
 {
     Task<AccountResponse> CreateAccountAsync(CreateAccountRequest accountRequest, CancellationToken cancellationToken);
-    Task<AccountResponse?> AuthenticateAsync(AuthenticateRequest authenticateReques, CancellationToken cancellationTokent);
+    Task<AccountResponse?> AuthenticateAsync(AuthenticateRequest authenticateRequest, CancellationToken cancellationToken);
     Task<AccountResponse> GetAccountAsync(Guid accountId, CancellationToken cancellationToken);
 }
