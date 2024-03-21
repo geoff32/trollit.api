@@ -5,7 +5,7 @@ using TrollIt.Domain.Accounts.Acl;
 using TrollIt.Domain.Accounts.Acl.Models;
 using TrollIt.Domain.Accounts.Infrastructure;
 
-namespace TrollIt.Domain.Tests;
+namespace TrollIt.Domain.Tests.Accounts.Acl;
 
 public class AccountsAclTest
 {

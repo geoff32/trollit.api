@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TrollIt.Domain\TrollIt.Domain.csproj" />
+    <ProjectReference Include="..\..\src\TrollIt.Application\TrollIt.Application.csproj" />
+    <ProjectReference Include="..\..\src\TrollIt.Infrastructure\TrollIt.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

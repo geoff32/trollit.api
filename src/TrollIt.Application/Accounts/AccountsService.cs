@@ -23,6 +23,12 @@ internal class AccountsService
         var trollInfos = await trollBestiary.GetTrollAsync(accountRequest.TrollId)
             ?? throw new AppException<AccountExceptions>(AccountExceptions.TrollUnknown);
 
+        var existingAccount = await accountsRepository.GetAccountByLoginAsync(accountRequest.UserName, cancellationToken);
+        if (existingAccount != null)
+        {
+            throw new AppException<AccountExceptions>(AccountExceptions.AccountAlreadyExists);
+        }
+
         var trollDto = new TrollDto(accountRequest.TrollId, trollInfos.Name, accountRequest.Token);
         var accountDto = new AccountDto(Guid.NewGuid(), accountRequest.UserName, trollDto);
         var account = accountAcl.ToDomain(accountDto, accountRequest.Password);

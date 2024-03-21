@@ -3,5 +3,6 @@
 internal enum AccountExceptions
 {
     AccountNotFound,
-    TrollUnknown
+    TrollUnknown,
+    AccountAlreadyExists
 }
