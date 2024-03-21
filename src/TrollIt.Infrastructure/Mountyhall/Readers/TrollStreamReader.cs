@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TrollIt.Infrastructure.Mountyhall.Models;
 using TrollIt.Infrastructure.Mountyhall.Readers.Abstractions;
 

@@ -18,7 +18,7 @@ internal class PublicScriptErrorProvider : IPublicScriptErrorProvider
     {
         if (Enum.TryParse<PublicScriptErrorCodes>(content
                 .Split(":", StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()
-                ?.Split(" ", StringSplitOptions.RemoveEmptyEntries)?.LastOrDefault(), out var errorCode))
+                ?.Split(" ", StringSplitOptions.RemoveEmptyEntries).LastOrDefault(), out var errorCode))
         {
             return errorCode;
         }

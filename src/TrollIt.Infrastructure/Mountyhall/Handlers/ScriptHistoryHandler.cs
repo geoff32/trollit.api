@@ -8,8 +8,6 @@ public class ScriptHistoryHandler(IScriptsService scriptsService) : DelegatingHa
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        // await _scriptRepository.CleanAsync();
-
         var queryParams = QueryHelpers.ParseQuery(request.RequestUri?.Query);
         if (queryParams.TryGetValue("Numero", out var paramTrollId)
             && int.TryParse(paramTrollId, out var trollId))

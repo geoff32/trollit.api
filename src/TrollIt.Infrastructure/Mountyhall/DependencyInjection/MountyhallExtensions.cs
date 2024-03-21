@@ -7,7 +7,6 @@ using TrollIt.Infrastructure.Mountyhall.Readers;
 using TrollIt.Infrastructure.Mountyhall.Readers.Abstractions;
 using TrollIt.Infrastructure.Mountyhall.Readers.Common;
 using TrollIt.Infrastructure.Mountyhall.Readers.Errors;
-using TrollIt.Infrastructure.Scripts;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +24,6 @@ internal static class MountyhallExtensions
 
         services.AddTransient<ScriptHistoryHandler>();
 
-        var errorProvider = new PublicScriptErrorProvider();
         services.AddReader(readerBuilder =>
         {
             readerBuilder.AddReader<IEnumerable<Troll>, TrollStreamReader>();
