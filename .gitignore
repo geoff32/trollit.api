@@ -476,4 +476,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Sonar
+.sonarqube
+
 .env
