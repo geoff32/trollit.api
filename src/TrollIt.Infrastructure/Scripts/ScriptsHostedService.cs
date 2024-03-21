@@ -8,7 +8,7 @@ public class ScriptsHostedService(IScriptsService scriptsService, ILogger<Script
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (true)
+        while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
