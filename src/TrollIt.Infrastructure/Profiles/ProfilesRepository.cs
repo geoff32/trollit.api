@@ -19,7 +19,7 @@ internal class ProfilesRepository
     public async Task<IProfile?> GetProfileAsync(int trollId, CancellationToken cancellationToken)
     {
         var connection = dataSource.CreateConnection();
-        await connection.OpenAsync();
+        await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Models.Troll>(
             "SELECT * FROM app.get_troll(@pTrollId)",

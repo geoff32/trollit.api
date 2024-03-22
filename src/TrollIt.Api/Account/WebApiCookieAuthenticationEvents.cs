@@ -26,7 +26,7 @@ public class WebApiCookieAuthenticationEvents : CookieAuthenticationEvents
         await ReturnStatus(context.Response, StatusCodes.Status200OK);
     }
 
-    private async Task ReturnStatus(HttpResponse response, int status)
+    private static async Task ReturnStatus(HttpResponse response, int status)
     {
         response.StatusCode = status;
         await Task.CompletedTask;
