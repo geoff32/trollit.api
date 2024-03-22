@@ -1,3 +1,5 @@
-﻿namespace TrollIt.Infrastructure;
+﻿using TrollIt.Infrastructure.Mountyhall;
 
-public record InfrastructureOptions(string ConnectionString);
+namespace TrollIt.Infrastructure;
+
+public record InfrastructureOptions(string ConnectionString, MountyhallOptions Mountyhall);
