@@ -18,7 +18,7 @@ public static class InfrastructureExtensions
 
         services.AddMemoryCache();
 
-        services.AddMountyhall();
+        services.AddMountyhall(options.Mountyhall);
 
         services.AddAccounts();
         services.AddBestiaries();

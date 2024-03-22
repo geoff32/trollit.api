@@ -15,7 +15,7 @@ internal static class MountyhallExtensions
     private const string PlainTextContentServiceKey = "PlainText";
     private const string JsonScriptsServiceKey = "JsonPublicScripts";
 
-    public static void AddMountyhall(this IServiceCollection services)
+    public static void AddMountyhall(this IServiceCollection services, MountyhallOptions mountyhallOptions)
     {
         services.AddSingleton<IStreamReader, DefaultStreamReader>();
         services.AddKeyedSingleton<IHttpContentSerializer, PlainTextContentSerializer>(PlainTextContentServiceKey);
@@ -36,7 +36,7 @@ internal static class MountyhallExtensions
             })
             .ConfigureHttpClient(client =>
             {
-                client.BaseAddress = new Uri("http://ftp.mountyhall.com/");
+                client.BaseAddress = new Uri(mountyhallOptions.Ftp);
             });
 
         services
@@ -46,7 +46,7 @@ internal static class MountyhallExtensions
             })
             .ConfigureHttpClient(client =>
             {
-                client.BaseAddress = new Uri("http://sp.mountyhall.com/");
+                client.BaseAddress = new Uri(mountyhallOptions.PublicScript);
             })
             .AddHttpMessageHandler<ScriptHistoryHandler>();
     }

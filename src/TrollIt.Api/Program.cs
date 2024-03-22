@@ -2,6 +2,7 @@ using Serilog;
 using TrollIt.Api.Account.DependencyInjection;
 using TrollIt.Api.Exceptions;
 using TrollIt.Infrastructure;
+using TrollIt.Infrastructure.Mountyhall;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -11,10 +12,8 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Filter.With<ManagedExceptionLogEventFilter>()
     .WriteTo.Console());
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -22,8 +21,10 @@ builder.Services.AddWebApiAuthentication();
 
 builder.Services.AddDomain();
 builder.Services.AddApplication();
-var connectionString = builder.Configuration.GetConnectionString("postgres") ?? throw new ArgumentException("No connection found");
-builder.Services.AddInfrastructure(new InfrastructureOptions(connectionString));
+var connectionString = builder.Configuration.GetConnectionString("postgres") ?? throw new InvalidOperationException("No connection found");
+var mountyhallOptions = builder.Configuration.GetRequiredSection("Mountyhall").Get<MountyhallOptions>()
+    ?? throw new InvalidOperationException("Mountyhall settings not found");
+builder.Services.AddInfrastructure(new InfrastructureOptions(connectionString, mountyhallOptions));
 
 builder.Services.AddPortableObjectLocalization();
 
