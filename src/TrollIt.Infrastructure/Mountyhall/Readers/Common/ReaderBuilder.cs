@@ -4,11 +4,11 @@ namespace TrollIt.Infrastructure.Mountyhall.Readers.Common;
 
 internal class ReaderBuilder : IReaderBuilder
 {
-    private readonly IDictionary<Type, IContentReader> _readers;
+    private readonly Dictionary<Type, IContentReader> _readers;
 
     public ReaderBuilder()
     {
-        _readers = new Dictionary<Type, IContentReader>();
+        _readers = [];
     }
 
     public IReaderBuilder AddReader<T, TReader>()

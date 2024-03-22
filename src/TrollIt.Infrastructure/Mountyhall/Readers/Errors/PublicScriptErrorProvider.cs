@@ -12,9 +12,9 @@ internal class PublicScriptErrorProvider : IPublicScriptErrorProvider
         }
     }
 
-    private bool HasError(string content) => content.StartsWith("Erreur");
+    private static bool HasError(string content) => content.StartsWith("Erreur");
 
-    private PublicScriptErrorCodes GetErrorCodes(string content)
+    private static PublicScriptErrorCodes GetErrorCodes(string content)
     {
         if (Enum.TryParse<PublicScriptErrorCodes>(content
                 .Split(":", StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()
