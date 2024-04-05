@@ -65,7 +65,7 @@ internal class ScriptsRepositoryAcl(IScriptsAcl scriptsAcl) : IScriptsRepository
         );
     }
 
-    private DomainAbstractions.ScriptId ToDomain(ScriptId scriptId) => scriptId switch
+    private static DomainAbstractions.ScriptId ToDomain(ScriptId scriptId) => scriptId switch
     {
         ScriptId.Profile => DomainAbstractions.ScriptId.Profile,
         ScriptId.Effect => DomainAbstractions.ScriptId.Effect,
