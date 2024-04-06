@@ -1,6 +1,7 @@
+using TrollIt.Domain.Profiles.Abstractions;
 using TrollIt.Domain.Profiles.Acl.Models;
 
-namespace TrollIt.Domain.Profiles.Abstractions;
+namespace TrollIt.Domain.Profiles;
 
 internal record BonusMalus(int Physical, int Magical) : BonusMalus<int>(Physical, Magical), IBonusMalus
 {

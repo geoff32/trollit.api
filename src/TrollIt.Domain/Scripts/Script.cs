@@ -11,5 +11,5 @@ internal record Script(ScriptId Id, IScriptCategory Category, string Path, strin
     }
 
     public bool IsSameCategory(IScript script)
-        => script.Category == Category;
+        => script.Category.Equals(Category);
 }
