@@ -10,7 +10,7 @@ namespace TrollIt.Application.Tests.Scripts;
 public class ScriptsServiceTests
 {
     private readonly IScriptRepository _scriptRepository;
-    private readonly IScriptsService _scriptsService;
+    private readonly ScriptsService _scriptsService;
 
     public ScriptsServiceTests()
     {
