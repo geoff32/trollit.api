@@ -18,6 +18,10 @@
     <ProjectReference Include="..\TrollIt.Application\TrollIt.Application.csproj" />
     <ProjectReference Include="..\TrollIt.Infrastructure\TrollIt.Infrastructure.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="fr.po">
