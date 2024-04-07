@@ -16,6 +16,7 @@
   
   <ItemGroup>
     <InternalsVisibleTo Include="$(AssemblyName).Tests" />
+    <InternalsVisibleTo Include="TrollIt.Api.Tests" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,9 @@
 msgid "Title error"
 msgstr "Erreur"
 
+msgid "Unknown error"
+msgstr "Erreur inconnue"
+
 msgctxt "TrollIt.Domain.Accounts.Exceptions.AccountsException"
 msgid "InsecurePassword"
 msgstr "Le mot de passe doit faire plus de 5 caractères !"
@@ -24,6 +27,10 @@ msgstr "Compte inconnu"
 msgctxt "TrollIt.Application.Accounts.Exceptions.AccountExceptions"
 msgid "TrollUnknown"
 msgstr "Troll inconnu"
+
+msgctxt "TrollIt.Application.Accounts.Exceptions.AccountExceptions"
+msgid "AccountAlreadyExists"
+msgstr "Compte déjà existant"
 
 msgctxt "TrollIt.Infrastructure.Mountyhall.Exceptions.MountyhallExceptions"
 msgid "InvalidScript"

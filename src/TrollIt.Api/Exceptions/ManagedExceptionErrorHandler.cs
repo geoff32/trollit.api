@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Reflection;
 using Core.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -51,8 +50,13 @@ public class ManagedExceptionErrorHandler(ProblemDetailsFactory problemDetailsFa
     private ProblemDetails GetProblemDetails(HttpContext httpContext, ManagedException managedException)
     {
         var stringLocalizer = stringLocalizerFactory.Create(managedException.ExceptionType);
-        var title = stringLocalizer[$"Title error"];
         var detail = stringLocalizer[$"{managedException.Message}"];
-        return problemDetailsFactory.CreateProblemDetails(httpContext, statusCode: StatusCodes.Status400BadRequest, title: title, detail: detail.ResourceNotFound ? title : detail);
+        return problemDetailsFactory.CreateProblemDetails
+        (
+            httpContext,
+            statusCode: StatusCodes.Status400BadRequest,
+            title: stringLocalizer["Title error"],
+            detail: detail.ResourceNotFound ? stringLocalizer["Unknown error"] : detail
+        );
     }
 }
