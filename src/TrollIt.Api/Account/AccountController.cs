@@ -12,7 +12,7 @@ namespace TrollIt.Api.Account;
 
 [ApiController]
 [Route("api/account")]
-public class AccountController(IAccountsService accountService, ProblemDetailsFactory problemDetailsFactory, IStringLocalizer<AccountController> stringLocalizer) : ControllerBase
+public class AccountController(IAccountsService accountService, IStringLocalizer<AccountController> stringLocalizer) : ControllerBase
 {
     [HttpPost, AllowAnonymous]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateAccountRequest createAccountRequest, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ public class AccountController(IAccountsService accountService, ProblemDetailsFa
 
         if (account == null)
         {
-            return Unauthorized(problemDetailsFactory.CreateProblemDetails
+            return Unauthorized(ProblemDetailsFactory.CreateProblemDetails
             (
                 HttpContext,
                 statusCode: StatusCodes.Status401Unauthorized,
