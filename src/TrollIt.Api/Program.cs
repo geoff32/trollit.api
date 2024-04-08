@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Localization;
 using Serilog;
 using TrollIt.Api.Account.DependencyInjection;
 using TrollIt.Api.Exceptions;
@@ -29,14 +30,18 @@ builder.Services.AddInfrastructure(new InfrastructureOptions(connectionString, m
 builder.Services.AddPortableObjectLocalization();
 
 builder.Services
-    .Configure<RequestLocalizationOptions>(options => options
-        .AddSupportedCultures("fr")
-        .AddSupportedUICultures("fr"));
+    .Configure<RequestLocalizationOptions>(options => {
+        options
+            .AddSupportedCultures("fr-FR")
+            .AddSupportedUICultures("fr-FR");
+        options.DefaultRequestCulture = new RequestCulture("fr-FR");
+    });
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ManagedExceptionErrorHandler>();
 
 var app = builder.Build();
+app.UseRequestLocalization();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
