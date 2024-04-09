@@ -17,7 +17,7 @@ public class AccountController(IAccountsService accountService, IStringLocalizer
     [HttpPost, AllowAnonymous]
     public async Task<IActionResult> CreateAccountAsync([FromBody] CreateAccountRequest createAccountRequest, CancellationToken cancellationToken)
     {
-        var account = await  accountService.CreateAccountAsync(createAccountRequest, cancellationToken);
+        var account = await accountService.CreateAccountAsync(createAccountRequest, cancellationToken);
 
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, GetIdentity(account));
         return Ok(account);
@@ -26,7 +26,7 @@ public class AccountController(IAccountsService accountService, IStringLocalizer
     [HttpPost("validate"), Authorize]
     public async Task<IActionResult> ValidateAsync(CancellationToken cancellationToken)
     {
-        var account = await  accountService.GetAccountAsync(Guid.Parse(User.Identity!.Name!), cancellationToken);
+        var account = await accountService.GetAccountAsync(Guid.Parse(User.Identity!.Name!), cancellationToken);
 
         return Ok(account);
     }
@@ -34,7 +34,7 @@ public class AccountController(IAccountsService accountService, IStringLocalizer
     [HttpPost("signin"), AllowAnonymous]
     public async Task<IActionResult> SignInAsync(AuthenticateRequest authenticateRequest, CancellationToken cancellationToken)
     {
-        var account = await  accountService.AuthenticateAsync(authenticateRequest, cancellationToken);
+        var account = await accountService.AuthenticateAsync(authenticateRequest, cancellationToken);
 
         if (account == null)
         {
