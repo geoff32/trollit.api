@@ -167,4 +167,42 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
         response.Headers.TryGetValues("Set-Cookie", out var cookies);
         cookies.Should().BeNull();
     }
+
+    [Fact]
+    public async Task SignOutAsync_ReturnsNotContentResultAndResetCookie_WhenAuthenticatedUser()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        _authenticatedUserRepository.AddUser(userId);
+
+        // Act
+        var request = new HttpRequestMessage(HttpMethod.Post, "api/account/signout");
+        request.Headers.Add("Mock-Authenticated-UserId", userId.ToString());
+
+        var response = await _client.SendAsync(request);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+
+        // Assert cookie
+        response.Headers.TryGetValues("Set-Cookie", out var cookies);
+        cookies.Should().NotBeNull().And.ContainSingle().Which.Should().StartWith(".AspNetCore.Cookies=;");
+    }
+
+    [Fact]
+    public async Task SignOutAsync_ReturnsUnauthorized_WhenNoAuthenticatedUser()
+    {
+        // Arrange
+        _authenticatedUserRepository.Clear();
+
+        // Act
+        var response = await _client.PostAsync("api/account/signout", null);
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+
+        // Assert cookie
+        response.Headers.TryGetValues("Set-Cookie", out var cookies);
+        cookies.Should().BeNull();
+    }
 }
