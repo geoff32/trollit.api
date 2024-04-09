@@ -9,22 +9,35 @@ namespace TrollIt.Api.Tests;
 
 public static class HttpResponseMessageAssertionsExtensions
 {
-    public static async Task<AndConstraint<ObjectAssertions>> BeBadRequest<T>(this HttpResponseMessageAssertions assertions, T expected, Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> config)
+    public static async Task<AndConstraint<ObjectAssertions>> BeStatusCode<T>(this HttpResponseMessageAssertions assertions, HttpStatusCode statusCode, T expected, Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>> config)
     {
-        assertions.Subject.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        assertions.Subject.StatusCode.Should().Be(statusCode);
         var result = await assertions.Subject.Content.ReadFromJsonAsync<T>();
 
         return result.Should().NotBeNull().And.Subject.Should().BeOfType<T>().Which.Should().BeEquivalentTo(expected, config);
     }
-
-    public static Task<AndConstraint<ObjectAssertions>> BeBadRequest(this HttpResponseMessageAssertions assertions, string expectedDetail, string expectedTitle = "Erreur")
+    public static Task<AndConstraint<ObjectAssertions>> BeOk<T>(this HttpResponseMessageAssertions assertions, T expected, Func<EquivalencyAssertionOptions<T>, EquivalencyAssertionOptions<T>>? config = null)
     {
-        return assertions.BeBadRequest(new ProblemDetails
+        return assertions.BeStatusCode<T>(HttpStatusCode.OK, expected, config ?? (options => options));
+    }
+
+    public static Task<AndConstraint<ObjectAssertions>> BeProblemsDetailStatusCode(this HttpResponseMessageAssertions assertions, HttpStatusCode statusCode, string expectedDetail, string expectedTitle = "Erreur")
+    {
+        return assertions.BeStatusCode(statusCode, new ProblemDetails
         {
             Title = expectedTitle,
             Detail = expectedDetail,
-            Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-            Status = 400
-        }, options => options.Excluding(problem => problem.Extensions));
+            Status = (int)statusCode
+        }, options => options.Excluding(problem => problem.Extensions).Excluding(problem => problem.Type));
+    }
+
+    public static Task<AndConstraint<ObjectAssertions>> BeBadRequest(this HttpResponseMessageAssertions assertions, string expectedDetail, string expectedTitle = "Erreur")
+    {
+        return assertions.BeProblemsDetailStatusCode(HttpStatusCode.BadRequest, expectedDetail, expectedTitle);
+    }
+
+    public static Task<AndConstraint<ObjectAssertions>> BeUnauthorized(this HttpResponseMessageAssertions assertions, string expectedDetail, string expectedTitle = "Erreur")
+    {
+        return assertions.BeProblemsDetailStatusCode(HttpStatusCode.Unauthorized, expectedDetail, expectedTitle);
     }
 }
