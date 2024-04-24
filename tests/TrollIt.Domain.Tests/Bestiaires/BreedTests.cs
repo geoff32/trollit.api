@@ -1,5 +1,6 @@
 using FluentAssertions;
 using TrollIt.Domain.Bestiaries;
+using TrollIt.Domain.Bestiaries.Acl.Models;
 
 namespace TrollIt.Domain.Tests.Bestiaires;
 

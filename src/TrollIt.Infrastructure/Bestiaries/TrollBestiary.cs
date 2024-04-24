@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using TrollIt.Domain;
 using TrollIt.Domain.Bestiaries.Abstractions;
 using TrollIt.Domain.Bestiaries.Acl.Abstractions;
 using TrollIt.Domain.Bestiaries.Acl.Models;

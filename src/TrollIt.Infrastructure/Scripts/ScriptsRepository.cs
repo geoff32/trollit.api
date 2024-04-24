@@ -11,15 +11,21 @@ namespace TrollIt.Infrastructure.Scripts;
 
 internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepositoryAcl scriptsRepositoryAcl) : IScriptRepository
 {
-    public async Task CleanHistoryAsync(DateTimeOffset beforeDate)
+    public async Task CleanHistoryAsync(DateTimeOffset beforeDate, CancellationToken cancellationToken)
     {
         using var connection = dataSource.CreateConnection();
-        await connection.OpenAsync();
+        await connection.OpenAsync(cancellationToken);
 
-        await connection.ExecuteAsync(
-            "app.clean_scriptshistory",
-            new { pbeforedate = beforeDate },
-            commandType: CommandType.StoredProcedure);
+        await connection.ExecuteAsync
+        (
+            new CommandDefinition
+            (
+                "app.clean_scriptshistory",
+                new { pbeforedate = beforeDate },
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
+            )
+        );
     }
 
     public async Task<ITrollScript?> GetTrollScriptAsync(int trollId, CancellationToken cancellationToken)
@@ -31,7 +37,7 @@ internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepository
         (
             new CommandDefinition
             (
-                "SELECT * FROM app.get_trollscripts(@pTrollId, @pFromDate)",
+                "SELECT trollid, trollname, profile, effect, view, equipment, flies FROM app.get_trollscripts(@pTrollId, @pFromDate)",
                 new { ptrollid = trollId, pFromDate = DateTimeOffset.UtcNow.AddDays(-1) },
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
@@ -50,7 +56,7 @@ internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepository
         (
             new CommandDefinition
             (
-                "SELECT * FROM app.get_scriptinfos()",
+                "SELECT id, name, script, category FROM app.get_scriptinfos()",
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
             )

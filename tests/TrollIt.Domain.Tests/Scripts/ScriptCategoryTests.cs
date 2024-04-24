@@ -2,8 +2,6 @@ using FluentAssertions;
 using TrollIt.Domain.Scripts;
 using TrollIt.Domain.Scripts.Acl.Models;
 using TrollIt.Domain.Scripts.Exceptions;
-using System.Collections.Generic;
-using System.Linq;
 using TrollIt.Domain.Scripts.Abstractions;
 
 namespace TrollIt.Domain.Tests.Scripts;

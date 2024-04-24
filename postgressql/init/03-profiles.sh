@@ -116,6 +116,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 
             CALL app.refresh_attribute(pTroll.id, 'vitality', v_profile.vitality);
             CALL app.refresh_attribute(pTroll.id, 'view', v_profile.view);
+            CALL app.refresh_attribute(pTroll.id, 'attack', v_profile.attack);
             CALL app.refresh_attribute(pTroll.id, 'dodge', v_profile.dodge);
             CALL app.refresh_attribute(pTroll.id, 'damage', v_profile.damage);
             CALL app.refresh_attribute(pTroll.id, 'regeneration', v_profile.regeneration);
