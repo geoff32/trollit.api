@@ -31,6 +31,6 @@ internal class SharesService(ISharesRepository sharesRepository, ISharesAcl shar
 
         var userMember = sharePolicy.GetMember(user.TrollId);
 
-        return userMember == null || userMember.Status == ShareStatus.Guest ? null : new SharePolicyResponse(sharePolicy);
+        return userMember == null || userMember.IsGuest ? null : new SharePolicyResponse(sharePolicy);
     }
 }

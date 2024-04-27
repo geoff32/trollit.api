@@ -3,6 +3,7 @@ using TrollIt.Domain.Scripts;
 using TrollIt.Domain.Scripts.Acl.Models;
 using TrollIt.Domain.Scripts.Exceptions;
 using TrollIt.Domain.Scripts.Abstractions;
+using FluentAssertions.Specialized;
 
 namespace TrollIt.Domain.Tests.Scripts;
 
@@ -38,6 +39,6 @@ public class ScriptCategoryTests
         Action act = () => scriptCategory.EnsureAccess(scriptCounters);
 
         // Assert
-        act.Should().Throw<DomainException<ScriptsExceptions>>().WithMessage("*MaxCallScript*");
+        act.Should().ThrowDomainException<ScriptsExceptions>(ScriptsExceptions.MaxCallScript);
     }
 }

@@ -14,4 +14,6 @@ internal record Member(int Id, ShareStatus Status, IEnumerable<IFeature> Feature
         )
     {
     }
+
+    public bool IsGuest => Status == ShareStatus.Guest;
 }

@@ -1,5 +1,4 @@
-﻿using TrollIt.Domain.Policies;
-using TrollIt.Domain.Shares.Abstractions;
+﻿using TrollIt.Domain.Shares.Abstractions;
 using TrollIt.Domain.Shares.Acl.Abstractions;
 using TrollIt.Domain.Shares.Acl.Models;
 
@@ -11,13 +10,14 @@ public class SharesAcl : ISharesAcl
 
     public IUserPolicy ToDomain(int trollId, IEnumerable<ISharePolicy> sharePolicies)
     {
-        return new UserPolicy(new UserPolicyDto(trollId, sharePolicies.SelectMany(sharePolicy => MergeToRights(sharePolicy.Members))));
+        return new UserPolicy(new UserPolicyDto(trollId, MergeToRights(sharePolicies.SelectMany(sharePolicy => sharePolicy.Members))));
     }
 
     private static IEnumerable<TrollRightDto> MergeToRights(IEnumerable<IMember> members)
     {
-        return members.Where(member => member.Status != ShareStatus.Guest)
-            .Select(member => new TrollRightDto(member.Id, MergeToDto(member.Features)));
+        return members.Where(member => !member.IsGuest)
+            .GroupBy(member => member.Id)
+            .Select(memberRights => new TrollRightDto(memberRights.Key, Initialize(MergeToDto(memberRights.SelectMany(m => m.Features)))));
     }
 
     private static IEnumerable<FeatureDto> MergeToDto(IEnumerable<IFeature> features)

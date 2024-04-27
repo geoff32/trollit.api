@@ -14,6 +14,8 @@ using TrollIt.Domain;
 using System.Net;
 using TrollIt.Api.Tests.Mock;
 using NSubstitute.ReturnsExtensions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using TrollIt.Domain.Scripts.Infrastructure;
 
 namespace TrollIt.Api.Tests.Account;
 
@@ -32,6 +34,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
             builder.ConfigureTestServices(services =>
             {
                 services.AddSingleton(_accountsService);
+                services.Replace(ServiceDescriptor.Singleton(Substitute.For<IScriptRepository>()));
                 services.AddMockCookieAuthentication(_authenticatedUserRepository);
             });
         }).CreateClient();

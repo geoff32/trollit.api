@@ -4,8 +4,8 @@ public enum SharesExceptions
 {
     MemberNotFound,
     InvitationNotFound,
-    InvitationAlreadyExistsInPolicy,
+    InvitationAlreadyExistsInSharePolicy,
     IsAlreadyMember,
     NoReadAccess,
-    NoWriteAccess
+    NoRefreshAccess
 }

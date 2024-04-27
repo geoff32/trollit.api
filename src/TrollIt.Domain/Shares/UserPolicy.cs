@@ -23,7 +23,7 @@ internal record UserPolicy(int TrollId, IEnumerable<ITrollRight> Rights) : IUser
     {
         if (TrollId != trollId && !CanRefresh(featureId, trollId))
         {
-            throw new DomainException<SharesExceptions>(SharesExceptions.NoWriteAccess);
+            throw new DomainException<SharesExceptions>(SharesExceptions.NoRefreshAccess);
         }
     }
 

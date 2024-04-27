@@ -16,6 +16,30 @@ msgctxt "TrollIt.Domain.Scripts.Exceptions.ScriptsExceptions"
 msgid "MaxCallScript"
 msgstr "Limite d'appels à ce script atteinte !"
 
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "MemberNotFound"
+msgstr "Membre non trouvé !"
+
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "InvitationNotFound"
+msgstr "Invitation non trouvée !"
+
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "InvitationAlreadyExistsInSharePolicy"
+msgstr "Le membre a déjà été invité !"
+
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "IsAlreadyMember"
+msgstr "Le membre est déjà présent dans le groupe !"
+
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "NoReadAccess"
+msgstr "Le membre n'autorise pas l'accès à ces données !"
+
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "NoRefreshAccess"
+msgstr "Le membre n'autorise pas la mise à jour de ces données !"
+
 msgctxt "TrollIt.Api.Account.AccountController"
 msgid "Invalid login or password"
 msgstr "Identifiant ou mot de passe invalide"
@@ -31,6 +55,10 @@ msgstr "Troll inconnu"
 msgctxt "TrollIt.Application.Accounts.Exceptions.AccountExceptions"
 msgid "AccountAlreadyExists"
 msgstr "Compte déjà existant"
+
+msgctxt "TrollIt.Application.Profiles.Exceptions.ProfileExceptions"
+msgid "TrollNotFound"
+msgstr "Troll inconnu"
 
 msgctxt "TrollIt.Infrastructure.Mountyhall.Exceptions.MountyhallExceptions"
 msgid "InvalidScript"

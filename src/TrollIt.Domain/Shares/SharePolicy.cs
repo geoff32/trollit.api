@@ -1,9 +1,8 @@
-﻿using TrollIt.Domain.Shares;
-using TrollIt.Domain.Shares.Abstractions;
+﻿using TrollIt.Domain.Shares.Abstractions;
 using TrollIt.Domain.Shares.Acl.Models;
 using TrollIt.Domain.Shares.Exceptions;
 
-namespace TrollIt.Domain.Policies
+namespace TrollIt.Domain.Shares
 {
     internal class SharePolicy(Guid id, string name, IEnumerable<IMember> members) : ISharePolicy
     {
@@ -24,8 +23,8 @@ namespace TrollIt.Domain.Policies
             if (member != null)
             {
                 throw new DomainException<SharesExceptions>(
-                    member.Status == ShareStatus.Guest
-                        ? SharesExceptions.InvitationAlreadyExistsInPolicy
+                    member.IsGuest
+                        ? SharesExceptions.InvitationAlreadyExistsInSharePolicy
                         : SharesExceptions.IsAlreadyMember);
             }
 
@@ -34,13 +33,7 @@ namespace TrollIt.Domain.Policies
 
         public void AcceptInvitation(int memberId)
         {
-            var member = GetMember(memberId)
-                ?? throw new DomainException<SharesExceptions>(SharesExceptions.InvitationNotFound);
-
-            if (member.Status != ShareStatus.Guest)
-            {
-                throw new DomainException<SharesExceptions>(SharesExceptions.IsAlreadyMember);
-            }
+            RemoveInvitation(memberId);
 
             _members.Add(new Member(memberId, ShareStatus.User, []));
         }
@@ -49,7 +42,12 @@ namespace TrollIt.Domain.Policies
         {
             var member = GetMember(memberId)
                 ?? throw new DomainException<SharesExceptions>(SharesExceptions.InvitationNotFound);
-            
+
+            if (!member.IsGuest)
+            {
+                throw new DomainException<SharesExceptions>(SharesExceptions.IsAlreadyMember);
+            }
+
             _members.Remove(member);
         }
 
@@ -57,9 +55,15 @@ namespace TrollIt.Domain.Policies
         {
             var member = GetMember(memberId)
                 ?? throw new DomainException<SharesExceptions>(SharesExceptions.MemberNotFound);
+
+            if (member.IsGuest)
+            {
+                throw new DomainException<SharesExceptions>(SharesExceptions.MemberNotFound);
+            }
+
             _members.Remove(member);
         }
 
-        public IMember? GetMember(int trollId) => _members.FirstOrDefault(member => member.Id == trollId);
+        public IMember? GetMember(int trollId) => _members.Find(member => member.Id == trollId);
     }
 }

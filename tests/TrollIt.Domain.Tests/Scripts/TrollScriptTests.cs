@@ -4,6 +4,7 @@ using TrollIt.Domain.Scripts.Abstractions;
 using TrollIt.Domain.Scripts.Acl.Models;
 using TrollIt.Domain.Scripts.Exceptions;
 using NSubstitute;
+using FluentAssertions.Specialized;
 
 namespace TrollIt.Domain.Tests.Scripts;
 
@@ -80,6 +81,6 @@ public class TrollScriptTests
         Action act = () => trollScript.GetScriptCounter("nonexistentPath");
 
         // Assert
-        act.Should().Throw<DomainException<ScriptsExceptions>>().WithMessage("*UnkownScript*");
+        act.Should().ThrowDomainException(ScriptsExceptions.UnkownScript);
     }
 }
