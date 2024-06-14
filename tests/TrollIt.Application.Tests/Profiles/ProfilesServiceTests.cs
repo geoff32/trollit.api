@@ -8,6 +8,8 @@ using TrollIt.Domain.Profiles.Abstractions;
 using TrollIt.Application.Profiles.Models;
 using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Profiles.Acl.Models;
+using TrollIt.Domain;
+using TrollIt.Domain.Shares.Exceptions;
 
 namespace TrollIt.Application.Profiles.Tests;
 public class ProfilesServiceTests
@@ -25,8 +27,9 @@ public class ProfilesServiceTests
         var cancellationToken = CancellationToken.None;
         var userPolicy = Substitute.For<IUserPolicy>();
         var profileDto = GetProfileDto(trollId);
-        sharesRepository.GetUserPolicyAsync(user.TrollId, cancellationToken).Returns(userPolicy);
         var profile = Mock(profileDto);
+
+        sharesRepository.GetUserPolicyAsync(user.TrollId, cancellationToken).Returns(userPolicy);
         profilesRepository.GetProfileAsync(trollId, cancellationToken).Returns(profile);
 
         // Act
@@ -35,7 +38,31 @@ public class ProfilesServiceTests
         // Assert
         result.Should().NotBeNull()
             .And.BeOfType<ProfileResponse>()
-            .And.BeEquivalentTo(ToResponse(profileDto));
+            .And.BeEquivalentTo(new ProfileResponse(profile));
+    }
+
+    [Fact]
+    public async Task GetProfileAsync_WhenUserHasNoReadAccess_ShouldThrowException()
+    {
+        // Arrange
+        var sharesRepository = Substitute.For<ISharesRepository>();
+        var profilesRepository = Substitute.For<IProfilesRepository>();
+        var accountsRepository = Substitute.For<IAccountsRepository>();
+        var profilesService = new ProfilesService(profilesRepository, sharesRepository, accountsRepository);
+        var user = new AppUser(Guid.NewGuid(), 1, "accountId");
+        var userPolicy = Substitute.For<IUserPolicy>();
+
+        var cancellationToken = CancellationToken.None;
+        sharesRepository.GetUserPolicyAsync(user.TrollId, cancellationToken).Returns(userPolicy);
+        userPolicy.When(fake => fake.EnsureReadAccess(FeatureId.Profile, user.TrollId))
+            .Do(call => throw new DomainException<SharesExceptions>(SharesExceptions.NoReadAccess));
+
+        // Act
+        Func<Task> act = async () => await profilesService.GetProfileAsync(user, user.TrollId, cancellationToken);
+
+        // Assert
+        await act.Should().ThrowAsync<DomainException<SharesExceptions>>()
+            .WithMessage("NoReadAccess");
     }
 
     [Fact]
@@ -53,7 +80,7 @@ public class ProfilesServiceTests
         var account = Substitute.For<IAccount>();
         var profileDto = GetProfileDto(trollId);
         var profile = Mock(profileDto);
-        
+
         sharesRepository.GetUserPolicyAsync(user.TrollId, cancellationToken).Returns(userPolicy);
         accountsRepository.GetAccountByTrollAsync(trollId, cancellationToken).Returns(account);
         profilesRepository.RefreshProfileAsync(trollId, Arg.Any<string>(), cancellationToken).Returns(profile);
@@ -64,7 +91,56 @@ public class ProfilesServiceTests
         // Assert
         result.Should().NotBeNull()
             .And.BeOfType<ProfileResponse>()
-            .And.BeEquivalentTo(ToResponse(profileDto));
+            .And.BeEquivalentTo(new ProfileResponse(profile));
+    }
+
+    [Fact]
+    public async Task RefreshProfileAsync_WhenUserHasNoReadAccess_ShouldThrowException()
+    {
+        // Arrange
+        var sharesRepository = Substitute.For<ISharesRepository>();
+        var profilesRepository = Substitute.For<IProfilesRepository>();
+        var accountsRepository = Substitute.For<IAccountsRepository>();
+        var profilesService = new ProfilesService(profilesRepository, sharesRepository, accountsRepository);
+        var user = new AppUser(Guid.NewGuid(), 1, "accountId");
+        var userPolicy = Substitute.For<IUserPolicy>();
+
+        var cancellationToken = CancellationToken.None;
+        sharesRepository.GetUserPolicyAsync(user.TrollId, cancellationToken).Returns(userPolicy);
+        userPolicy.When(fake => fake.EnsureReadAccess(FeatureId.Profile, user.TrollId))
+            .Do(call => throw new DomainException<SharesExceptions>(SharesExceptions.NoReadAccess));
+
+        // Act
+        Func<Task> act = async () => await profilesService.RefreshProfileAsync(user, user.TrollId, cancellationToken);
+
+        // Assert
+        await act.Should().ThrowAsync<DomainException<SharesExceptions>>()
+            .WithMessage("NoReadAccess");
+    }
+
+    [Fact]
+    public async Task RefreshProfileAsync_WhenTrollNotFound_ShouldThrowException()
+    {
+        // Arrange
+        var profilesRepository = Substitute.For<IProfilesRepository>();
+        var sharesRepository = Substitute.For<ISharesRepository>();
+        var accountsRepository = Substitute.For<IAccountsRepository>();
+        var profilesService = new ProfilesService(profilesRepository, sharesRepository, accountsRepository);
+        var user = new AppUser(Guid.NewGuid(), 1, "accountId");
+        var trollId = 1;
+        var cancellationToken = CancellationToken.None;
+        var userPolicy = Substitute.For<IUserPolicy>();
+
+        sharesRepository.GetUserPolicyAsync(user.TrollId, cancellationToken).Returns(userPolicy);
+        accountsRepository.When(fake => fake.GetAccountByTrollAsync(trollId, cancellationToken))
+            .Do(call => throw new AppException<ProfileExceptions>(ProfileExceptions.TrollNotFound));
+
+        // Act
+        Func<Task> act = async () => await profilesService.RefreshProfileAsync(user, user.TrollId, cancellationToken);
+
+        // Assert
+        await act.Should().ThrowAsync<AppException<ProfileExceptions>>()
+            .WithMessage("TrollNotFound");
     }
 
     private static ProfileDto GetProfileDto(int trollId)
@@ -84,43 +160,6 @@ public class ProfilesServiceTests
             MagicResistance: new ValueAttributeDto(1000, new BonusMalusDto(2600, 0))
         );
     }
-
-    private static ProfileResponse ToResponse(ProfileDto profileDto) =>
-        new(
-            TrollId: profileDto.TrollId,
-            TurnDuration: ToTurnDurationResponse(profileDto.TurnDuration),
-            Vitality: ToVitalityResponse(profileDto.Vitality),
-            View: ToResponse(profileDto.View),
-            Attack: ToResponse(profileDto.Attack, 6),
-            Dodge: ToResponse(profileDto.Dodge, 6),
-            Damage: ToResponse(profileDto.Damage, 3),
-            Armor: ToResponse(profileDto.Armor, 3),
-            Regeneration: ToResponse(profileDto.Regeneration, 3),
-            MagicMastery: ToResponse(profileDto.MagicMastery),
-            MagicResistance: ToResponse(profileDto.MagicResistance)
-        );
-
-    private static DiceAttributeResponse ToResponse(DiceAttributeDto diceAttributeDto, int side) =>
-        new(diceAttributeDto.Value, new DiceResponse(side), ToResponse(diceAttributeDto.BonusMalus));
-
-    private static ValueAttributeResponse ToResponse(ValueAttributeDto valueAttributeDto) =>
-        new(valueAttributeDto.Value, ToResponse(valueAttributeDto.BonusMalus));
-
-    private static BonusMalusResponse ToResponse(BonusMalusDto bonusMalusDto) =>
-        new(bonusMalusDto.Physical, bonusMalusDto.Magical);
-
-    private static BonusMalusResponse<TimeSpan> ToResponse(BonusMalusDto<TimeSpan> bonusMalusDto) =>
-        new(bonusMalusDto.Physical, bonusMalusDto.Magical);
-
-    private static TurnDurationResponse ToTurnDurationResponse(ValueAttributeDto<TimeSpan> valueAttributeDto) =>
-        new(valueAttributeDto.Value, ToResponse(valueAttributeDto.BonusMalus));
-
-    private static VitalityResponse ToVitalityResponse(ValueAttributeDto vitalityDto) =>
-        new
-        (
-            vitalityDto.Value + vitalityDto.BonusMalus.Physical + vitalityDto.BonusMalus.Magical, vitalityDto.Value,
-            ToResponse(vitalityDto.BonusMalus)
-        );
 
     private static IProfile Mock(ProfileDto profileDto)
     {

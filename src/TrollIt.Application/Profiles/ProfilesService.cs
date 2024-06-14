@@ -1,7 +1,5 @@
 using TrollIt.Application.Profiles.Abstractions;
 using TrollIt.Application.Profiles.Models;
-using TrollIt.Application.Shares.Abstractions;
-using TrollIt.Domain;
 using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Domain.Profiles.Infrastructure;
 using TrollIt.Domain.Shares.Infrastructure;
@@ -26,7 +24,7 @@ internal class ProfilesService(IProfilesRepository profilesRepository, ISharesRe
         userPolicy.EnsureReadAccess(Domain.Shares.Abstractions.FeatureId.Profile, trollId);
 
         var account = await accountsRepository.GetAccountByTrollAsync(trollId, cancellationToken)
-            ?? throw new DomainException<ProfileExceptions>(ProfileExceptions.TrollNotFound);
+            ?? throw new AppException<ProfileExceptions>(ProfileExceptions.TrollNotFound);
 
         var profile = await profilesRepository.RefreshProfileAsync(trollId, account.Troll.ScriptToken, cancellationToken);
 
