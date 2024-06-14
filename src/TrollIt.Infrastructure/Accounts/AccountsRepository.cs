@@ -44,7 +44,7 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
         (
             new CommandDefinition
             (
-                "SELECT * FROM app.get_account(@pId)",
+                "SELECT id, login, password, trollid, trollname, scripttoken FROM app.get_account(@pId)",
                 new { pid = id },
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
@@ -63,8 +63,27 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
         (
             new CommandDefinition
             (
-                "SELECT * FROM app.get_account_bylogin(@pLogin)",
+                "SELECT id, login, password, trollid, trollname, scripttoken FROM app.get_account_bylogin(@pLogin)",
                 new { plogin = login },
+                commandType: CommandType.Text,
+                cancellationToken: cancellationToken
+            )
+        );
+
+        return accountRepositoryAcl.ToDomain(data);
+    }
+
+    public async Task<IAccount?> GetAccountByTrollAsync(int trollId, CancellationToken cancellationToken)
+    {
+        using var connection = dataSource.CreateConnection();
+        await connection.OpenAsync(cancellationToken);
+
+        var data = await connection.QuerySingleOrDefaultAsync<Account>
+        (
+            new CommandDefinition
+            (
+                "SELECT id, login, password, trollid, trollname, scripttoken FROM app.get_account_bytroll(@pTrollId)",
+                new { ptrollid = trollId },
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
             )

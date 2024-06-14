@@ -1,4 +1,5 @@
 ﻿using TrollIt.Domain.Bestiaries.Abstractions;
+using TrollIt.Domain.Bestiaries.Acl.Models;
 
 namespace TrollIt.Domain.Bestiaries;
 

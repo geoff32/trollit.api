@@ -5,9 +5,9 @@ namespace TrollIt.Infrastructure.Scripts.Models;
 internal record TrollScripts
 (
     [PgName("trollid")]
-    int TrollId,
+    int Trollid,
     [PgName("trollname")]
-    string Trollname,    
+    string Trollname,
     [PgName("profile")]
     ScriptCounter Profile,
     [PgName("effect")]

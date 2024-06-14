@@ -9,5 +9,5 @@ internal record ScriptCounter
     [PgName("call")]
     int Call,
     [PgName("maxcall")]
-    int Maxcall
+    int? Maxcall
 );

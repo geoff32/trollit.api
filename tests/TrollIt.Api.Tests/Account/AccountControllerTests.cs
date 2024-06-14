@@ -14,6 +14,8 @@ using TrollIt.Domain;
 using System.Net;
 using TrollIt.Api.Tests.Mock;
 using NSubstitute.ReturnsExtensions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using TrollIt.Domain.Scripts.Infrastructure;
 
 namespace TrollIt.Api.Tests.Account;
 
@@ -32,6 +34,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
             builder.ConfigureTestServices(services =>
             {
                 services.AddSingleton(_accountsService);
+                services.Replace(ServiceDescriptor.Singleton(Substitute.For<IScriptRepository>()));
                 services.AddMockCookieAuthentication(_authenticatedUserRepository);
             });
         }).CreateClient();
@@ -99,15 +102,15 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
     public async Task ValidateAsync_ReturnsOkResult_WhenAuthenticatedUser()
     {
         // Arrange
-        var userId = Guid.NewGuid();
-        _authenticatedUserRepository.AddUser(userId);
+        var user = new AppUser(Guid.NewGuid(), 1, "testName");
+        _authenticatedUserRepository.AddUser(user);
 
-        var accountResponse = new AccountResponse(userId, "test@test.com", new TrollResponse(1, "testName"));
-        _accountsService.GetAccountAsync(userId, Arg.Any<CancellationToken>()).Returns(accountResponse);
+        var accountResponse = new AccountResponse(user.AccountId, "test@test.com", new TrollResponse(user.TrollId, user.TrollName));
+        _accountsService.GetAccountAsync(user.AccountId, Arg.Any<CancellationToken>()).Returns(accountResponse);
 
         // Act
         var request = new HttpRequestMessage(HttpMethod.Post, "api/account/validate");
-        request.Headers.Add("Mock-Authenticated-UserId", userId.ToString());
+        request.Headers.Add("Mock-Authenticated-UserId", user.AccountId.ToString());
 
         var response = await _client.SendAsync(request);
 
@@ -172,12 +175,12 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Progra
     public async Task SignOutAsync_ReturnsNotContentResultAndResetCookie_WhenAuthenticatedUser()
     {
         // Arrange
-        var userId = Guid.NewGuid();
-        _authenticatedUserRepository.AddUser(userId);
+        var user = new AppUser(Guid.NewGuid(), 1, "testName");
+        _authenticatedUserRepository.AddUser(user);
 
         // Act
         var request = new HttpRequestMessage(HttpMethod.Post, "api/account/signout");
-        request.Headers.Add("Mock-Authenticated-UserId", userId.ToString());
+        request.Headers.Add("Mock-Authenticated-UserId", user.AccountId.ToString());
 
         var response = await _client.SendAsync(request);
 

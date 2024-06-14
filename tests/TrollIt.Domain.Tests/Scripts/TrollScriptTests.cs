@@ -3,8 +3,8 @@ using TrollIt.Domain.Scripts;
 using TrollIt.Domain.Scripts.Abstractions;
 using TrollIt.Domain.Scripts.Acl.Models;
 using TrollIt.Domain.Scripts.Exceptions;
-using System.Collections.Generic;
-using System.Linq;
+using NSubstitute;
+using FluentAssertions.Specialized;
 
 namespace TrollIt.Domain.Tests.Scripts;
 
@@ -33,12 +33,32 @@ public class TrollScriptTests
     }
 
     [Fact]
+    public void EnsureAccess_ShouldCallEnsureAccessOnScriptCounterAndCategory()
+    {
+        // Arrange
+        var script = Substitute.For<IScript>();
+        var scriptCategory = Substitute.For<IScriptCategory>();
+        script.Category.Returns(scriptCategory);
+        script.IsSameCategory(script).Returns(true);
+        var scriptCounter = Substitute.For<IScriptCounter>();
+        scriptCounter.Script.Returns(script);
+        var trollScript = new TrollScript(1, [scriptCounter]);
+
+        // Act
+        trollScript.EnsureAccess(scriptCounter);
+
+        // Assert
+        scriptCounter.Received().EnsureAccess();
+        scriptCategory.Received().EnsureAccess(Arg.Is<IEnumerable<IScriptCounter>>(x => x.Single() == scriptCounter));
+    }
+
+    [Fact]
     public void GetScriptCounter_ReturnsCorrectScriptCounter_WhenScriptPathExists()
     {
         // Arrange
         var scriptDto = new ScriptDto(Id: ScriptId.Profile, Category: new ScriptCategoryDto("testCategory", 5), Path: "testPath", Name: "testName");
         var scriptCounterDto = new ScriptCounterDto(Script: scriptDto, Call: 3, MaxCall: 5);
-        var trollScriptDto = new TrollScriptDto(TrollId: 1, ScriptCounters: new[] { scriptCounterDto });
+        var trollScriptDto = new TrollScriptDto(TrollId: 1, ScriptCounters: [scriptCounterDto]);
         var trollScript = new TrollScript(trollScriptDto);
 
         // Act
@@ -54,13 +74,13 @@ public class TrollScriptTests
         // Arrange
         var scriptDto = new ScriptDto(Id: ScriptId.Profile, Category: new ScriptCategoryDto("testCategory", 5), Path: "testPath", Name: "testName");
         var scriptCounterDto = new ScriptCounterDto(Script: scriptDto, Call: 3, MaxCall: 5);
-        var trollScriptDto = new TrollScriptDto(TrollId: 1, ScriptCounters: new[] { scriptCounterDto });
+        var trollScriptDto = new TrollScriptDto(TrollId: 1, ScriptCounters: [scriptCounterDto]);
         var trollScript = new TrollScript(trollScriptDto);
 
         // Act
         Action act = () => trollScript.GetScriptCounter("nonexistentPath");
 
         // Assert
-        act.Should().Throw<DomainException<ScriptsExceptions>>().WithMessage("*UnkownScript*");
+        act.Should().ThrowDomainException(ScriptsExceptions.UnkownScript);
     }
 }

@@ -21,7 +21,7 @@ internal class ScriptsRepositoryAcl(IScriptsAcl scriptsAcl) : IScriptsRepository
     public DomainAbstractions.ITrollScript? ToDomain(TrollScripts? data) =>
         data == null ? null : scriptsAcl.ToDomain(new TrollScriptDto
         (
-            data.TrollId,
+            data.Trollid,
             new[] { data.Profile, data.Effect, data.View, data.Equipment, data.Flies }
                 .Select(ToDomain)
         ));
@@ -61,7 +61,7 @@ internal class ScriptsRepositoryAcl(IScriptsAcl scriptsAcl) : IScriptsRepository
                 Name: data.Script.Name
             ),
             Call: data.Call,
-            MaxCall: data.Maxcall
+            MaxCall: data.Maxcall ?? data.Script.Category.Maxcall
         );
     }
 

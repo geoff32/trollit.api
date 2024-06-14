@@ -50,4 +50,13 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
         FROM app.accounts a
         WHERE a.login = pLogin;
     \$\$  LANGUAGE sql SECURITY DEFINER;
+
+    CREATE OR REPLACE FUNCTION app.get_account_bytroll(pTrollId INT)
+    RETURNS setof app.account AS
+    \$\$
+        SELECT a.id, a.login, a.password, t.id, t.name, t.scripttoken
+        FROM app.accounts a
+        INNER JOIN app.trollaccounts t on t.accountid = a.id
+        WHERE t.id = pTrollId;
+    \$\$  LANGUAGE sql SECURITY DEFINER;
 EOSQL
