@@ -81,6 +81,6 @@ public class TrollScriptTests
         Action act = () => trollScript.GetScriptCounter("nonexistentPath");
 
         // Assert
-        act.Should().ThrowDomainException(ScriptsExceptions.UnkownScript);
+        act.Should().ThrowDomainException(ScriptsExceptions.UnknownScript);
     }
 }

@@ -9,12 +9,12 @@ namespace TrollIt.Infrastructure;
 
 internal class TrollBestiary(IFtpClient ftpClient, IBestiariesAcl bestiariesAcl, IMemoryCache memoryCache) : ITrollBestiary
 {
-    public async Task<ITroll?> GetTrollAsync(int id)
+    public async Task<ITroll?> GetTrollAsync(int id, CancellationToken cancellationToken)
     {
         var guilds = await memoryCache.GetOrCreateAsync("AllGuilds", async entry =>
         {
             entry.SetAbsoluteExpiration(TimeSpan.FromSeconds(3600));
-            var guilds = await ftpClient.GetGuildsAsync();
+            var guilds = await ftpClient.GetGuildsAsync(cancellationToken);
 
             return guilds.ToDictionary(guild => guild.Id, guild => new GuildDto(guild.Id, guild.Name));
         });
@@ -22,7 +22,7 @@ internal class TrollBestiary(IFtpClient ftpClient, IBestiariesAcl bestiariesAcl,
         var trolls = await memoryCache.GetOrCreateAsync("AllTrolls", async entry =>
         {
             entry.SetAbsoluteExpiration(TimeSpan.FromSeconds(3600));
-            var trolls = await ftpClient.GetTrollsAsync();
+            var trolls = await ftpClient.GetTrollsAsync(cancellationToken);
 
             return trolls.ToDictionary(
                 troll => troll.Id,

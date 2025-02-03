@@ -13,7 +13,7 @@ internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepository
 {
     public async Task CleanHistoryAsync(DateTimeOffset beforeDate, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         await connection.ExecuteAsync
@@ -30,7 +30,7 @@ internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepository
 
     public async Task<ITrollScript?> GetTrollScriptAsync(int trollId, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<TrollScripts>
@@ -49,7 +49,7 @@ internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepository
 
     public async Task<ITrollScript> InitializeTrollScriptAsync(int trollId, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QueryAsync<ScriptInfo>
@@ -67,7 +67,7 @@ internal class ScriptsRepository(NpgsqlDataSource dataSource, IScriptsRepository
 
     public async Task TraceAsync(ITrollScript trollScript, Domain.Scripts.Abstractions.ScriptId scriptId, DateTimeOffset dateTime, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         await connection.ExecuteAsync

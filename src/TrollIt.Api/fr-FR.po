@@ -9,7 +9,7 @@ msgid "InsecurePassword"
 msgstr "Le mot de passe doit faire plus de 5 caractères !"
 
 msgctxt "TrollIt.Domain.Scripts.Exceptions.ScriptsExceptions"
-msgid "UnkownScript"
+msgid "UnknownScript"
 msgstr "Script inconnu !"
 
 msgctxt "TrollIt.Domain.Scripts.Exceptions.ScriptsExceptions"
@@ -31,14 +31,6 @@ msgstr "Le membre a déjà été invité !"
 msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
 msgid "IsAlreadyMember"
 msgstr "Le membre est déjà présent dans le groupe !"
-
-msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
-msgid "NoReadAccess"
-msgstr "Le membre n'autorise pas l'accès à ces données !"
-
-msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
-msgid "NoRefreshAccess"
-msgstr "Le membre n'autorise pas la mise à jour de ces données !"
 
 msgctxt "TrollIt.Api.Account.AccountController"
 msgid "Invalid login or password"
@@ -64,30 +56,30 @@ msgctxt "TrollIt.Infrastructure.Mountyhall.Exceptions.MountyhallExceptions"
 msgid "InvalidScript"
 msgstr "Script invalide"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "Unknown"
 msgstr "Script mountyhall : Erreur inconnue"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "IncorrectParameter"
 msgstr "Script mountyhall : Paramètre incorrect"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "UnknownTroll"
 msgstr "Script mountyhall : Troll inconnu"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "WrongPassword"
 msgstr "Script mountyhall : Mot de passe restreint incorrect"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "Maintenance"
 msgstr "Script mountyhall : Maintenance en cours"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "ScriptTemporarilyDisabled"
 msgstr "Script mountyhall : Temporairement désactivé"
 
-msgctxt "TrollIt.Infrastructure.Mountyhall.Readers.Errors.PublicScriptErrorCodes"
+msgctxt "TrollIt.Infrastructure.Mountyhall.Errors.PublicScriptErrorCodes"
 msgid "PnjOrTrollDisabled"
 msgstr "Script mountyhall : PNJ ou troll inactif"

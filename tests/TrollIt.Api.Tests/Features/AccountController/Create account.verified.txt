@@ -1,0 +1,8 @@
+﻿{
+  userId: Guid_1,
+  userName: testUserName,
+  troll: {
+    id: 1,
+    name: trollName
+  }
+}

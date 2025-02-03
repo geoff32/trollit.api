@@ -21,11 +21,12 @@ public class UserPolicyTests
 
         // Assert
         userPolicy.TrollId.Should().Be(userPolicyDto.Id);
-        userPolicy.Rights.Should().ContainSingle().Which.Should().BeEquivalentTo(new TrollRight(1, []));
+        userPolicy.Rights.Should().ContainSingle()
+            .Which.Should().BeEquivalentTo(new TrollRight(1, []));
     }
 
     [Fact]
-    public void EnsureReadAccess_ShouldNotThrow_WhenReadOwnTroll()
+    public void CanRead_ShouldReturnTrue_WhenReadOwnTroll()
     {
         // Arrange
         var featureId = FeatureId.Profile;
@@ -33,35 +34,14 @@ public class UserPolicyTests
         var userPolicy = new UserPolicy(trollId, []);
 
         // Act
-        Action act = () => userPolicy.EnsureReadAccess(featureId, trollId);
+        var canRead = userPolicy.CanRead(featureId, trollId);
 
         // Assert
-        act.Should().NotThrow();
+        canRead.Should().BeTrue();
     }
 
     [Fact]
-    public void EnsureReadAccess_ShouldNotThrow_WhenCanReadOtherTroll()
-    {
-        // Arrange
-        var featureId = FeatureId.Profile;
-        var trollId = 1;
-        var feature = Substitute.For<IFeature>();
-        feature.Id.Returns(featureId);
-        feature.CanRead.Returns(true);
-        var trollRight = Substitute.For<ITrollRight>();
-        trollRight.TrollId.Returns(trollId);
-        trollRight.Features.Returns([feature]);
-        var userPolicy = new UserPolicy(2, [trollRight]);
-
-        // Act
-        Action act = () => userPolicy.EnsureReadAccess(featureId, trollId);
-
-        // Assert
-        act.Should().NotThrow();
-    }
-
-    [Fact]
-    public void EnsureReadAccess_ShouldThrow_WhenCannotReadOtherTroll()
+    public void CanRead_ShouldReturnFalse_WhenCannotReadOtherTroll()
     {
         // Arrange
         var featureId = FeatureId.Profile;
@@ -75,14 +55,14 @@ public class UserPolicyTests
         var userPolicy = new UserPolicy(2, [trollRight]);
 
         // Act
-        Action act = () => userPolicy.EnsureReadAccess(featureId, trollId);
+        var canRead = userPolicy.CanRead(featureId, trollId);
 
         // Assert
-        act.Should().ThrowDomainException(SharesExceptions.NoReadAccess);
+        canRead.Should().BeFalse();
     }
 
     [Fact]
-    public void EnsureRefreshAccess_ShouldNotThrow_WhenRefreshOwnTroll()
+    public void CanRefresh_ShouldReturnTrue_WhenRefreshOwnTroll()
     {
         // Arrange
         var featureId = FeatureId.Profile;
@@ -90,14 +70,14 @@ public class UserPolicyTests
         var userPolicy = new UserPolicy(trollId, []);
 
         // Act
-        Action act = () => userPolicy.EnsureRefreshAccess(featureId, trollId);
+        var canRefresh = userPolicy.CanRefresh(featureId, trollId);
 
         // Assert
-        act.Should().NotThrow();
+        canRefresh.Should().BeTrue();
     }
 
     [Fact]
-    public void EnsureRefreshAccess_ShouldNotThrow_WhenCanRefreshOtherTroll()
+    public void CanRefresh_ShouldReturnTrue_WhenCanRefreshOtherTroll()
     {
         // Arrange
         var featureId = FeatureId.Profile;
@@ -111,14 +91,14 @@ public class UserPolicyTests
         var userPolicy = new UserPolicy(2, [trollRight]);
 
         // Act
-        Action act = () => userPolicy.EnsureRefreshAccess(featureId, trollId);
+        var canRefresh = userPolicy.CanRefresh(featureId, trollId);
 
         // Assert
-        act.Should().NotThrow();
+        canRefresh.Should().BeTrue();
     }
 
     [Fact]
-    public void EnsureRefreshAccess_ShouldThrow_WhenCannotRefreshOtherTroll()
+    public void CanRefresh_ShouldReturnFalse_WhenCannotRefreshOtherTroll()
     {
         // Arrange
         var featureId = FeatureId.Profile;
@@ -131,9 +111,9 @@ public class UserPolicyTests
         var userPolicy = new UserPolicy(2, [trollRight]);
 
         // Act
-        Action act = () => userPolicy.EnsureRefreshAccess(featureId, trollId);
+        var canRefresh = userPolicy.CanRefresh(featureId, trollId);
 
         // Assert
-        act.Should().ThrowDomainException(SharesExceptions.NoRefreshAccess);
+        canRefresh.Should().BeFalse();
     }
 }

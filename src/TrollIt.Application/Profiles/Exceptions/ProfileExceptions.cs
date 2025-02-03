@@ -1,4 +1,4 @@
-﻿namespace TrollIt.Application;
+﻿namespace TrollIt.Application.Profiles.Exceptions;
 
 internal enum ProfileExceptions
 {

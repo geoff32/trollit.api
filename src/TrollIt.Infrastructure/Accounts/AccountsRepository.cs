@@ -12,7 +12,7 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 {
     public async Task CreateAccountAsync(IAccount account, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         await connection.ExecuteAsync
@@ -37,7 +37,7 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 
     public async Task<IAccount?> GetAccountAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Account>
@@ -56,7 +56,7 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 
     public async Task<IAccount?> GetAccountByLoginAsync(string login, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Account>
@@ -75,7 +75,7 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 
     public async Task<IAccount?> GetAccountByTrollAsync(int trollId, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Account>

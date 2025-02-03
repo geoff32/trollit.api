@@ -1,7 +1,9 @@
-﻿using TrollIt.Domain.Profiles.Abstractions;
+﻿using System.Text.Json.Serialization;
+using TrollIt.Domain.Profiles.Abstractions;
 
 namespace TrollIt.Application.Profiles.Models;
 
+[method:JsonConstructor]
 public record ProfileResponse(
     int TrollId,
     TurnDurationResponse TurnDuration,

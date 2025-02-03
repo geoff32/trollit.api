@@ -15,7 +15,7 @@ internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAc
 {
     public async Task<ISharePolicy?> GetSharePolicyAsync(Guid sharePolicyId, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<SharePolicy>
@@ -34,7 +34,7 @@ internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAc
 
     public async Task<IEnumerable<ISharePolicy>> GetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QueryAsync<SharePolicy>
@@ -60,7 +60,7 @@ internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAc
 
     public async Task SaveAsync(ISharePolicy sharePolicy, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         await connection.ExecuteAsync

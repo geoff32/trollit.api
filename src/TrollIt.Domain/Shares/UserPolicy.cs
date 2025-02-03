@@ -11,31 +11,13 @@ internal record UserPolicy(int TrollId, IEnumerable<ITrollRight> Rights) : IUser
     {
     }
 
-    public void EnsureReadAccess(FeatureId featureId, int trollId)
-    {
-        if (TrollId != trollId && !CanRead(featureId, trollId))
-        {
-            throw new DomainException<SharesExceptions>(SharesExceptions.NoReadAccess);
-        }
-    }
+    public bool CanRead(FeatureId featureId, int trollId) =>
+        IsSameTroll(trollId) || TryGetFeature(trollId, featureId, out var feature) && feature.CanRead;
+    
+    public bool CanRefresh(FeatureId featureId, int trollId) => 
+        IsSameTroll(trollId) || TryGetFeature(trollId, featureId, out var feature) && feature.CanRefresh;
 
-    public void EnsureRefreshAccess(FeatureId featureId, int trollId)
-    {
-        if (TrollId != trollId && !CanRefresh(featureId, trollId))
-        {
-            throw new DomainException<SharesExceptions>(SharesExceptions.NoRefreshAccess);
-        }
-    }
-
-    private bool CanRead(FeatureId featureId, int trollId)
-    {
-        return TryGetFeature(trollId, featureId, out var feature) && (feature.CanRead || feature.CanRefresh);
-    }
-
-    private bool CanRefresh(FeatureId featureId, int trollId)
-    {
-        return TryGetFeature(trollId, featureId, out var feature) && feature.CanRefresh;
-    }
+    private bool IsSameTroll(int trollId) => TrollId == trollId;
 
     private bool TryGetFeature(int userTrollId, FeatureId featureId, [NotNullWhen(true)] out IFeature? feature)
     {

@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TrollIt.Application\TrollIt.Application.csproj" />
     <ProjectReference Include="..\TrollIt.Infrastructure\TrollIt.Infrastructure.csproj" />
+    <ProjectReference Include="..\TrollIt.ServiceDefaults\TrollIt.ServiceDefaults.csproj" />
   </ItemGroup>
   
   <ItemGroup>

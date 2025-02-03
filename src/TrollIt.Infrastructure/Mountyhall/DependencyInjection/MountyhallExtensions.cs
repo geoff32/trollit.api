@@ -1,12 +1,12 @@
 ﻿using Refit;
 using TrollIt.Infrastructure.Mountyhall;
+using TrollIt.Infrastructure.Mountyhall.Errors;
 using TrollIt.Infrastructure.Mountyhall.Errors.Abstractions;
 using TrollIt.Infrastructure.Mountyhall.Handlers;
 using TrollIt.Infrastructure.Mountyhall.Models;
 using TrollIt.Infrastructure.Mountyhall.Readers;
 using TrollIt.Infrastructure.Mountyhall.Readers.Abstractions;
 using TrollIt.Infrastructure.Mountyhall.Readers.Common;
-using TrollIt.Infrastructure.Mountyhall.Readers.Errors;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

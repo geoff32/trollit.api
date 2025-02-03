@@ -19,5 +19,5 @@ internal record TrollScript(int TrollId, IReadOnlyCollection<IScriptCounter> Scr
 
     public IScriptCounter GetScriptCounter(string scriptPath)
         => ScriptCounters.FirstOrDefault(counter => counter.Script.Path.Equals(scriptPath, StringComparison.InvariantCultureIgnoreCase))
-            ?? throw new DomainException<ScriptsExceptions>(ScriptsExceptions.UnkownScript);
+            ?? throw new DomainException<ScriptsExceptions>(ScriptsExceptions.UnknownScript);
 }
