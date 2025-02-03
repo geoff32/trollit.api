@@ -3,11 +3,10 @@ using TrollIt.Application.Profiles.Exceptions;
 using TrollIt.Application.Profiles.Models;
 using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Domain.Profiles.Infrastructure;
-using TrollIt.Domain.Shares.Infrastructure;
 
 namespace TrollIt.Application.Profiles;
 
-internal class ProfilesService(IProfilesRepository profilesRepository, ISharesRepository sharesRepository, IAccountsRepository accountsRepository) : IProfilesService
+internal class ProfilesService(IProfilesRepository profilesRepository, IAccountsRepository accountsRepository) : IProfilesService
 {
     public async Task<ProfileResponse?> GetProfileAsync(int trollId, CancellationToken cancellationToken)
     {

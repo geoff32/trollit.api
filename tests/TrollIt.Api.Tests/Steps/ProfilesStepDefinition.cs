@@ -1,12 +1,10 @@
 using FluentAssertions;
-using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
 using Reqnroll;
 using TrollIt.Api.Tests.Context;
 using TrollIt.Application;
-using TrollIt.Application.Accounts.Models;
 using TrollIt.Application.Profiles.Models;
 using TrollIt.Domain.Profiles.Acl.Models;
 using TrollIt.Domain.Profiles;
