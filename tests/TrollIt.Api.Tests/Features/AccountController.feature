@@ -55,6 +55,7 @@ Feature: AccountController
 # Account validation
   Scenario: Validate account
     Given I am an authenticated user
+    And I have an existing account
     When I validate the account
     Then The response should be ok
 

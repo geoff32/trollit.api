@@ -1,1 +1,8 @@
-﻿{"userId":"00000000-0000-0000-0000-000000000000","userName":"","troll":{"id":0,"name":""}}
+﻿{
+  userId: Guid_1,
+  userName: Login,
+  troll: {
+    id: 1,
+    name: testName
+  }
+}

@@ -1,5 +1,5 @@
-using System.Net;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Reqnroll;
 using TrollIt.Api.Tests.Context;
 
@@ -16,7 +16,10 @@ public class HttpStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        return response.Should().BeOk(verifyContext.Settings);
+        return response
+            .Should().NotBeNull()
+            .And.Be200Ok()
+            .And.VerifyContentAsync(verifyContext.Settings);
     }
 
     [Then(@"The response should be no content")]
@@ -25,7 +28,7 @@ public class HttpStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        response.Should().Be204NoContent();
     }
 
     [Then(@"The response should be bad request")]
@@ -34,7 +37,10 @@ public class HttpStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        return response.Should().BeBadRequest(verifyContext.Settings);
+        return response
+            .Should().NotBeNull()
+            .And.Be400BadRequest()
+            .And.VerifyContentAsync<ProblemDetails>(verifyContext.Settings);
     }
 
     [Then(@"The response should be unauthorized")]
@@ -43,7 +49,10 @@ public class HttpStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        return response.Should().BeUnauthorized(verifyContext.Settings);
+        return response
+            .Should().NotBeNull()
+            .And.Be401Unauthorized()
+            .And.VerifyContentAsync<ProblemDetails>(verifyContext.Settings);
     }
 
     [Then(@"The response should be forbidden")]
@@ -52,7 +61,10 @@ public class HttpStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        return response.Should().BeForbidden(verifyContext.Settings);
+        return response
+            .Should().NotBeNull()
+            .And.Be403Forbidden()
+            .And.VerifyContentAsync<ProblemDetails>(verifyContext.Settings);
     }
 
     [Then(@"The response should be not found")]
@@ -61,7 +73,10 @@ public class HttpStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        return response.Should().BeNotFound(verifyContext.Settings);
+        return response
+            .Should().NotBeNull()
+            .And.Be404NotFound()
+            .And.VerifyContentAsync<ProblemDetails>(verifyContext.Settings);
     }
 
     [Then(@"The authentication cookie should be set")]
@@ -71,7 +86,9 @@ public class HttpStepDefinition(
         WebApiContext.EnsureResponseInitialized(response);
         
         response.Headers.TryGetValues("Set-Cookie", out var cookies);
-        cookies.Should().NotBeNull().And.ContainSingle().Which.Should().StartWith(".AspNetCore.Cookies=")
+        cookies.Should().NotBeNull()
+            .And.ContainSingle()
+            .Which.Should().StartWith(".AspNetCore.Cookies=")
             .And.NotStartWith(".AspNetCore.Cookies=;");
     }
 
@@ -82,7 +99,9 @@ public class HttpStepDefinition(
         WebApiContext.EnsureResponseInitialized(response);
         
         response.Headers.TryGetValues("Set-Cookie", out var cookies);
-        cookies.Should().NotBeNull().And.ContainSingle().Which.Should().StartWith(".AspNetCore.Cookies=;");
+        cookies.Should().NotBeNull()
+            .And.ContainSingle()
+            .Which.Should().StartWith(".AspNetCore.Cookies=;");
     }
 
     [Then(@"The authentication cookie should not be set")]

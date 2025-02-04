@@ -1,1 +1,89 @@
-﻿{"trollId":1,"turnDuration":{"value":"12:00:00","bonusMalus":{"physical":"00:00:00","magical":"00:00:00"}},"vitality":{"max":30,"value":30,"bonusMalusResponse":{"physical":0,"magical":0}},"view":{"value":3,"bonusMalus":{"physical":0,"magical":0}},"attack":{"value":3,"diceSide":{"side":6},"bonusMalus":{"physical":0,"magical":0}},"dodge":{"value":3,"diceSide":{"side":6},"bonusMalus":{"physical":0,"magical":0}},"damage":{"value":4,"diceSide":{"side":3},"bonusMalus":{"physical":0,"magical":0}},"armor":{"value":3,"diceSide":{"side":3},"bonusMalus":{"physical":0,"magical":0}},"regeneration":{"value":3,"diceSide":{"side":3},"bonusMalus":{"physical":0,"magical":0}},"magicMastery":{"value":0,"bonusMalus":{"physical":0,"magical":0}},"magicResistance":{"value":0,"bonusMalus":{"physical":0,"magical":0}}}
+﻿{
+  trollId: 1,
+  turnDuration: {
+    value: 12:00:00,
+    bonusMalus: {
+      physical: 00:00:00,
+      magical: 00:00:00
+    }
+  },
+  vitality: {
+    max: 30,
+    value: 30,
+    bonusMalusResponse: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  view: {
+    value: 3,
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  attack: {
+    value: 3,
+    diceSide: {
+      side: 6
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  dodge: {
+    value: 3,
+    diceSide: {
+      side: 6
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  damage: {
+    value: 4,
+    diceSide: {
+      side: 3
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  armor: {
+    value: 3,
+    diceSide: {
+      side: 3
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  regeneration: {
+    value: 3,
+    diceSide: {
+      side: 3
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  magicMastery: {
+    value: 0,
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  magicResistance: {
+    value: 0,
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  }
+}

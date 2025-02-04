@@ -1,1 +1,89 @@
-﻿{"trollId":0,"turnDuration":{"value":"00:00:00","bonusMalus":{"physical":"00:00:00","magical":"00:00:00"}},"vitality":{"max":0,"value":0,"bonusMalusResponse":{"physical":0,"magical":0}},"view":{"value":0,"bonusMalus":{"physical":0,"magical":0}},"attack":{"value":0,"diceSide":{"side":0},"bonusMalus":{"physical":0,"magical":0}},"dodge":{"value":0,"diceSide":{"side":0},"bonusMalus":{"physical":0,"magical":0}},"damage":{"value":0,"diceSide":{"side":0},"bonusMalus":{"physical":0,"magical":0}},"armor":{"value":0,"diceSide":{"side":0},"bonusMalus":{"physical":0,"magical":0}},"regeneration":{"value":0,"diceSide":{"side":0},"bonusMalus":{"physical":0,"magical":0}},"magicMastery":{"value":0,"bonusMalus":{"physical":0,"magical":0}},"magicResistance":{"value":0,"bonusMalus":{"physical":0,"magical":0}}}
+﻿{
+  trollId: 0,
+  turnDuration: {
+    value: 00:00:00,
+    bonusMalus: {
+      physical: 00:00:00,
+      magical: 00:00:00
+    }
+  },
+  vitality: {
+    max: 0,
+    value: 0,
+    bonusMalusResponse: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  view: {
+    value: 0,
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  attack: {
+    value: 0,
+    diceSide: {
+      side: 0
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  dodge: {
+    value: 0,
+    diceSide: {
+      side: 0
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  damage: {
+    value: 0,
+    diceSide: {
+      side: 0
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  armor: {
+    value: 0,
+    diceSide: {
+      side: 0
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  regeneration: {
+    value: 0,
+    diceSide: {
+      side: 0
+    },
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  magicMastery: {
+    value: 0,
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  },
+  magicResistance: {
+    value: 0,
+    bonusMalus: {
+      physical: 0,
+      magical: 0
+    }
+  }
+}

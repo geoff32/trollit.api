@@ -345,9 +345,12 @@ namespace TrollIt.Api.Tests.Features
     await testRunner.GivenAsync("I am an authenticated user", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 58
-    await testRunner.WhenAsync("I validate the account", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.AndAsync("I have an existing account", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 59
+    await testRunner.WhenAsync("I validate the account", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 60
     await testRunner.ThenAsync("The response should be ok", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -362,7 +365,7 @@ namespace TrollIt.Api.Tests.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Validate account with unauthenticated user", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 61
+#line 62
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -372,13 +375,13 @@ namespace TrollIt.Api.Tests.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 62
+#line 63
     await testRunner.GivenAsync("I am an unauthenticated user", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 63
+#line 64
     await testRunner.WhenAsync("I validate the account", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 64
+#line 65
     await testRunner.ThenAsync("The response should be unauthorized", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -393,7 +396,7 @@ namespace TrollIt.Api.Tests.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sign in", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 67
+#line 68
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -403,16 +406,16 @@ namespace TrollIt.Api.Tests.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 68
+#line 69
     await testRunner.GivenAsync("I have valid credentials", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 69
+#line 70
     await testRunner.WhenAsync("I sign in", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 70
+#line 71
     await testRunner.ThenAsync("The account response should be ok", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 71
+#line 72
     await testRunner.AndAsync("The authentication cookie should be set", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -427,7 +430,7 @@ namespace TrollIt.Api.Tests.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sign in with invalid credentials", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 73
+#line 74
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -437,16 +440,16 @@ namespace TrollIt.Api.Tests.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 74
+#line 75
     await testRunner.GivenAsync("I have invalid credentials", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 75
+#line 76
     await testRunner.WhenAsync("I sign in", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 76
+#line 77
     await testRunner.ThenAsync("The response should be unauthorized", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 77
+#line 78
     await testRunner.AndAsync("The authentication cookie should not be set", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -461,7 +464,7 @@ namespace TrollIt.Api.Tests.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Sign out", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 80
+#line 81
   this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -471,16 +474,16 @@ namespace TrollIt.Api.Tests.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 81
+#line 82
     await testRunner.GivenAsync("I am an authenticated user", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 82
+#line 83
     await testRunner.WhenAsync("I sign out", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 83
+#line 84
     await testRunner.ThenAsync("The response should be no content", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 84
+#line 85
     await testRunner.AndAsync("The authentication cookie should be unset", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }

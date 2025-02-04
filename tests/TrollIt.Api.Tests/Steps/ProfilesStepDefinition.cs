@@ -1,4 +1,3 @@
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NSubstitute;
 using NSubstitute.ReturnsExtensions;
@@ -121,7 +120,10 @@ public class ProfilesStepDefinition(
         var response = scenarioContext.Get<HttpResponseMessage>();
         WebApiContext.EnsureResponseInitialized(response);
         
-        await response.Should().BeOk<ProfileResponse>(verifyContext.Settings);
+        await response
+            .Should().NotBeNull()
+            .And.Be200Ok()
+            .And.VerifyContentAsync<ProfileResponse>(verifyContext.Settings);
     }
 
     private static readonly ProfileDto InitialProfile = new(

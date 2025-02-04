@@ -1,5 +1,5 @@
-﻿using System.Net;
-using FluentAssertions;
+﻿using Argon;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +38,8 @@ public class UncaughtExceptionsTests : IClassFixture<WebApplicationFactory<Progr
         var user = new AppUser(Guid.NewGuid(), 1, "testName");
         _authenticatedUserRepository.AddUser(user);
 
-        _accountsService.GetAccountAsync(user.AccountId, Arg.Any<CancellationToken>()).Throws(new Exception("Unhandled exception"));
+        _accountsService.GetAccountAsync(user.AccountId, Arg.Any<CancellationToken>())
+            .Throws(new Exception("Unhandled exception"));
 
         // Act
         var request = new HttpRequestMessage(HttpMethod.Post, "api/account/validate");
@@ -47,6 +48,21 @@ public class UncaughtExceptionsTests : IClassFixture<WebApplicationFactory<Progr
         var response = await _client.SendAsync(request);
 
         // Assert
-        await response.Should().BeProblemsDetailStatusCode(HttpStatusCode.InternalServerError, "Erreur inconnue");
+        var verifySettings = new VerifySettings();
+        verifySettings.AddExtraSettings(settings =>
+        {
+            settings.Formatting = Formatting.Indented;
+            settings.ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new CamelCaseNamingStrategy()
+            };
+        });
+        
+        verifySettings.UseDirectory("Exceptions");
+        verifySettings.UseFileName("Unhandled exception throw 500");
+        await response
+            .Should().NotBeNull()
+            .And.Be500InternalServerError()
+            .And.VerifyContentAsync<ProblemDetails>(verifySettings);
     }
 }

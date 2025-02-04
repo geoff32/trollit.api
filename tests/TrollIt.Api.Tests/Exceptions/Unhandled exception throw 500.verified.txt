@@ -1,0 +1,11 @@
+﻿{
+  type: https://tools.ietf.org/html/rfc9110#section-15.6.1,
+  title: Erreur,
+  status: 500,
+  detail: Erreur inconnue,
+  extensions: {
+    traceId: {
+      valueKind: String
+    }
+  }
+}

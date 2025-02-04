@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using FluentAssertions;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NSubstitute.ReturnsExtensions;
@@ -16,7 +15,7 @@ using TrollIt.Infrastructure.Mountyhall.Errors;
 namespace TrollIt.Api.Tests.Steps;
 
 [Binding]
-public sealed class AccountControllerStepDefinitions(WebApiContext webApiContext, VerifyContext verifyContext, ScenarioContext scenarioContext)
+public sealed class AccountStepDefinitions(WebApiContext webApiContext, VerifyContext verifyContext, ScenarioContext scenarioContext)
 {
     [Given(@"The name of troll (\d+) is (.*)")]
     public void GivenTheNameOfTrollIs(int trollId, string trollName)
@@ -34,7 +33,10 @@ public sealed class AccountControllerStepDefinitions(WebApiContext webApiContext
 
         var verifySettings = verifyContext.Settings;
         verifySettings.IgnoreMember<AccountResponse>(accountResponse => accountResponse.UserId);
-        await response.Should().BeOk<AccountResponse>(verifySettings);
+        await response
+            .Should().NotBeNull()
+            .And.Be200Ok()
+            .And.VerifyContentAsync<AccountResponse>(verifySettings);
     }
 
     #region Account Creation
