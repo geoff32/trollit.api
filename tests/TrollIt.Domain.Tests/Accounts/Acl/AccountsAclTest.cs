@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NSubstitute;
 using TrollIt.Domain.Accounts;
+using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Acl;
 using TrollIt.Domain.Accounts.Acl.Models;
 using TrollIt.Domain.Accounts.Infrastructure;
@@ -53,5 +54,21 @@ public class AccountsAclTest
             accountDto.Troll,
             Password = new Password(encryptedPassword, account.Id.ToString())
         });
+    }
+
+    [Fact]
+    public void ToDomain_AccountPolicyDto_ShouldReturnAccountPolicy()
+    {
+        // Arrange
+        var trollId = 1;
+        var accountPolicy = new AccountPolicyDto(trollId, [new TrollRightDto(2, [new FeatureDto(FeatureId.Profile, true, true), new FeatureDto(FeatureId.View, false, false)])]);
+        var sharesAcl = new AccountsAcl(_passwordEncryptor);
+
+        // Act
+        var userPolicy = sharesAcl.ToDomain(accountPolicy);
+
+        // Assert
+        userPolicy.Should().BeOfType<AccountPolicy>()
+            .Which.Should().BeEquivalentTo(new AccountPolicy(trollId, [new TrollRight(2, [new Feature(FeatureId.Profile, true, true), new Feature(FeatureId.View, false, false)])]));
     }
 }

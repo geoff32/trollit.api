@@ -1,10 +1,11 @@
-﻿using System.Data;
-using Dapper;
+﻿using Dapper;
 using Npgsql;
+using System.Data;
 using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Infrastructure.Accounts.Acl.Abstractions;
 using TrollIt.Infrastructure.Accounts.Models;
+using TrollIt.Infrastructure.Shares.Models;
 
 namespace TrollIt.Infrastructure.Accounts;
 
@@ -90,5 +91,23 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
         );
 
         return accountRepositoryAcl.ToDomain(data);
+    }
+
+    public async Task<IAccountPolicy> GetAccountPoliciesAsync(int trollId, CancellationToken cancellationToken)
+    {
+        await using var connection = dataSource.CreateConnection();
+        await connection.OpenAsync(cancellationToken);
+        var data = await connection.QueryAsync<SharePolicy>
+                (
+                    new CommandDefinition
+                    (
+                        "SELECT id, name, trolls FROM app.get_trollsharepolicies(@pTrollId)",
+                        new { ptrollid = trollId },
+                        commandType: CommandType.Text,
+                        cancellationToken: cancellationToken
+                    )
+                );
+
+        return accountRepositoryAcl.ToDomain(trollId, data);
     }
 }

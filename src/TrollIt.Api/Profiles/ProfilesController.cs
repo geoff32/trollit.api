@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TrollIt.Api.Authorization;
 using TrollIt.Application.Profiles.Abstractions;
 using TrollIt.Application.Profiles.Models;
-using TrollIt.Domain.Shares.Abstractions;
+using TrollIt.Domain.Accounts.Abstractions;
 
 namespace TrollIt.Api.Profiles
 {

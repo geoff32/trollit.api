@@ -1,9 +1,9 @@
 using FluentAssertions;
-using TrollIt.Domain.Shares.Acl.Models;
-using TrollIt.Domain.Shares;
-using TrollIt.Domain.Shares.Abstractions;
+using TrollIt.Domain.Accounts.Acl.Models;
+using TrollIt.Domain.Accounts;
+using TrollIt.Domain.Accounts.Abstractions;
 
-namespace TrollIt.Domain.Tests.Shares;
+namespace TrollIt.Domain.Tests.Accounts;
 
 public class TrollRightTests
 {

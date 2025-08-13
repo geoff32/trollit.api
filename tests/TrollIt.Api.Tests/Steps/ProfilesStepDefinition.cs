@@ -7,7 +7,7 @@ using TrollIt.Application;
 using TrollIt.Application.Profiles.Models;
 using TrollIt.Domain.Profiles.Acl.Models;
 using TrollIt.Domain.Profiles;
-using TrollIt.Domain.Shares.Abstractions;
+using TrollIt.Domain.Accounts.Abstractions;
 
 namespace TrollIt.Api.Tests.Steps;
 
@@ -23,22 +23,22 @@ public class ProfilesStepDefinition(
     {
         var appUser = scenarioContext.Get<AppUser>();
         var profile = scenarioContext.Get<ProfileDto>();
-        var userPolicy = Substitute.For<IUserPolicy>();
-        userPolicy.CanRead(FeatureId.Profile, profile.TrollId)
+        var accountPolicy = Substitute.For<IAccountPolicy>();
+        accountPolicy.CanRead(FeatureId.Profile, profile.TrollId)
             .Returns(true);
-        webApiContext.ShareRepository.GetUserPolicyAsync(appUser.TrollId, Arg.Any<CancellationToken>())
-            .Returns(userPolicy);
+        webApiContext.AccountsRepository.GetAccountPoliciesAsync(appUser.TrollId, Arg.Any<CancellationToken>())
+            .Returns(accountPolicy);
     }
     [Given(@"The profile is not shared for reading with me")]
     public void GivenTheProfileIsNotSharedForReadingWithMe()
     {
         var appUser = scenarioContext.Get<AppUser>();
         var profile = scenarioContext.Get<ProfileDto>();
-        var userPolicy = Substitute.For<IUserPolicy>();
-        userPolicy.CanRead(FeatureId.Profile, profile.TrollId)
+        var accountPolicy = Substitute.For<IAccountPolicy>();
+        accountPolicy.CanRead(FeatureId.Profile, profile.TrollId)
             .Returns(false);
-        webApiContext.ShareRepository.GetUserPolicyAsync(appUser.TrollId, Arg.Any<CancellationToken>())
-            .Returns(userPolicy);
+        webApiContext.AccountsRepository.GetAccountPoliciesAsync(appUser.TrollId, Arg.Any<CancellationToken>())
+            .Returns(accountPolicy);
     }
     
     [Given(@"The profile is shared for refresh with me")]
@@ -46,22 +46,22 @@ public class ProfilesStepDefinition(
     {
         var appUser = scenarioContext.Get<AppUser>();
         var profile = scenarioContext.Get<ProfileDto>();
-        var userPolicy = Substitute.For<IUserPolicy>();
-        userPolicy.CanRefresh(FeatureId.Profile, profile.TrollId)
+        var accountPolicy = Substitute.For<IAccountPolicy>();
+        accountPolicy.CanRefresh(FeatureId.Profile, profile.TrollId)
             .Returns(true);
-        webApiContext.ShareRepository.GetUserPolicyAsync(appUser.TrollId, Arg.Any<CancellationToken>())
-            .Returns(userPolicy);
+        webApiContext.AccountsRepository.GetAccountPoliciesAsync(appUser.TrollId, Arg.Any<CancellationToken>())
+            .Returns(accountPolicy);
     }
     [Given(@"The profile is not shared for refresh with me")]
     public void GivenTheProfileIsNotSharedForRefreshWithMe()
     {
         var appUser = scenarioContext.Get<AppUser>();
         var profile = scenarioContext.Get<ProfileDto>();
-        var userPolicy = Substitute.For<IUserPolicy>();
-        userPolicy.CanRefresh(FeatureId.Profile, profile.TrollId)
+        var accountPolicy = Substitute.For<IAccountPolicy>();
+        accountPolicy.CanRefresh(FeatureId.Profile, profile.TrollId)
             .Returns(false);
-        webApiContext.ShareRepository.GetUserPolicyAsync(appUser.TrollId, Arg.Any<CancellationToken>())
-            .Returns(userPolicy);
+        webApiContext.AccountsRepository.GetAccountPoliciesAsync(appUser.TrollId, Arg.Any<CancellationToken>())
+            .Returns(accountPolicy);
     }
     
     [Given(@"An existing profile")]

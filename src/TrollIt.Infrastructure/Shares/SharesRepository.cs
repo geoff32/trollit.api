@@ -1,17 +1,18 @@
-﻿using System.Data;
-using Dapper;
+﻿using Dapper;
 using Npgsql;
+using System.Data;
+using System.Runtime.CompilerServices;
 using TrollIt.Domain.Shares.Abstractions;
-using TrollIt.Domain.Shares.Acl.Abstractions;
 using TrollIt.Domain.Shares.Infrastructure;
 using TrollIt.Infrastructure.Npgsql;
+using TrollIt.Infrastructure.Shares.Abstractions;
 using TrollIt.Infrastructure.Shares.Acl.Abstractions;
 using TrollIt.Infrastructure.Shares.Models;
 
 namespace TrollIt.Infrastructure.Shares;
 
-internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAcl sharesRepositoryAcl, ISharesAcl sharesAcl)
-    : ISharesRepository
+internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAcl sharesRepositoryAcl)
+    : ISharesRepository, IInternalSharesRepository
 {
     public async Task<ISharePolicy?> GetSharePolicyAsync(Guid sharePolicyId, CancellationToken cancellationToken)
     {
@@ -32,30 +33,20 @@ internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAc
         return sharesRepositoryAcl.ToDomain(data);
     }
 
-    public async Task<IEnumerable<ISharePolicy>> GetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<SharePolicy>> InternalGetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken)
     {
         await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
-
-        var data = await connection.QueryAsync<SharePolicy>
-        (
-            new CommandDefinition
-            (
-                "SELECT id, name, trolls FROM app.get_trollsharepolicies(@pTrollId)",
-                new { ptrollid = trollId },
-                commandType: CommandType.Text,
-                cancellationToken: cancellationToken
-            )
-        );
-
-        return sharesRepositoryAcl.ToDomain(data);
-    }
-
-    public async Task<IUserPolicy> GetUserPolicyAsync(int trollId, CancellationToken cancellationToken)
-    {
-        var data = await GetTrollPoliciesAsync(trollId, cancellationToken);
-
-        return sharesAcl.ToDomain(trollId, data);
+        return await connection.QueryAsync<SharePolicy>
+                (
+                    new CommandDefinition
+                    (
+                        "SELECT id, name, trolls FROM app.get_trollsharepolicies(@pTrollId)",
+                        new { ptrollid = trollId },
+                        commandType: CommandType.Text,
+                        cancellationToken: cancellationToken
+                    )
+                );
     }
 
     public async Task SaveAsync(ISharePolicy sharePolicy, CancellationToken cancellationToken)

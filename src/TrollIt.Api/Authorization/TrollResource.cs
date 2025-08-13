@@ -1,4 +1,4 @@
-using TrollIt.Domain.Shares.Abstractions;
+using TrollIt.Domain.Accounts.Abstractions;
 
 namespace TrollIt.Api.Authorization;
 

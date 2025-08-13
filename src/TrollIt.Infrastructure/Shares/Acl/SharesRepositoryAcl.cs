@@ -85,6 +85,6 @@ internal class SharesRepositoryAcl(ISharesAcl sharesAcl) : ISharesRepositoryAcl
         _ => throw new ArgumentOutOfRangeException(nameof(status), status, null),
     };
 
-    private static bool CanRead(FeatureStatus status) => status == FeatureStatus.Read || status == FeatureStatus.Readwrite;
-    private static bool CanRefresh(FeatureStatus status) => status == FeatureStatus.Readwrite;
+    internal static bool CanRead(FeatureStatus status) => status == FeatureStatus.Read || status == FeatureStatus.Readwrite;
+    internal static bool CanRefresh(FeatureStatus status) => status == FeatureStatus.Readwrite;
 }

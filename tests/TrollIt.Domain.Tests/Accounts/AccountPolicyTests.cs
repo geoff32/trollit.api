@@ -1,26 +1,24 @@
 using NSubstitute;
 using FluentAssertions;
-using TrollIt.Domain.Shares.Acl.Models;
-using TrollIt.Domain.Shares;
-using TrollIt.Domain.Shares.Abstractions;
-using FluentAssertions.Specialized;
-using TrollIt.Domain.Shares.Exceptions;
+using TrollIt.Domain.Accounts.Acl.Models;
+using TrollIt.Domain.Accounts;
+using TrollIt.Domain.Accounts.Abstractions;
 
-namespace TrollIt.Domain.Tests.Shares;
+namespace TrollIt.Domain.Tests.Accounts;
 
-public class UserPolicyTests
+public class AccountPolicyTests
 {
     [Fact]
     public void Constructor_ShouldSetProperties_WhenCalledWithUserPolicyDto()
     {
         // Arrange
-        var userPolicyDto = new UserPolicyDto(1, [new TrollRightDto(1, [])]);
+        var accountPolicyDto = new AccountPolicyDto(1, [new TrollRightDto(1, [])]);
 
         // Act
-        var userPolicy = new UserPolicy(userPolicyDto);
+        var userPolicy = new AccountPolicy(accountPolicyDto);
 
         // Assert
-        userPolicy.TrollId.Should().Be(userPolicyDto.Id);
+        userPolicy.TrollId.Should().Be(accountPolicyDto.Id);
         userPolicy.Rights.Should().ContainSingle()
             .Which.Should().BeEquivalentTo(new TrollRight(1, []));
     }
@@ -31,7 +29,7 @@ public class UserPolicyTests
         // Arrange
         var featureId = FeatureId.Profile;
         var trollId = 1;
-        var userPolicy = new UserPolicy(trollId, []);
+        var userPolicy = new AccountPolicy(trollId, []);
 
         // Act
         var canRead = userPolicy.CanRead(featureId, trollId);
@@ -52,7 +50,7 @@ public class UserPolicyTests
         var trollRight = Substitute.For<ITrollRight>();
         trollRight.TrollId.Returns(trollId);
         trollRight.Features.Returns([feature]);
-        var userPolicy = new UserPolicy(2, [trollRight]);
+        var userPolicy = new AccountPolicy(2, [trollRight]);
 
         // Act
         var canRead = userPolicy.CanRead(featureId, trollId);
@@ -67,7 +65,7 @@ public class UserPolicyTests
         // Arrange
         var featureId = FeatureId.Profile;
         var trollId = 1;
-        var userPolicy = new UserPolicy(trollId, []);
+        var userPolicy = new AccountPolicy(trollId, []);
 
         // Act
         var canRefresh = userPolicy.CanRefresh(featureId, trollId);
@@ -88,7 +86,7 @@ public class UserPolicyTests
         var trollRight = Substitute.For<ITrollRight>();
         trollRight.TrollId.Returns(trollId);
         trollRight.Features.Returns([feature]);
-        var userPolicy = new UserPolicy(2, [trollRight]);
+        var userPolicy = new AccountPolicy(2, [trollRight]);
 
         // Act
         var canRefresh = userPolicy.CanRefresh(featureId, trollId);
@@ -108,7 +106,7 @@ public class UserPolicyTests
         feature.CanRefresh.Returns(false);
         var trollRight = Substitute.For<ITrollRight>();
         trollRight.Features.Returns([feature]);
-        var userPolicy = new UserPolicy(2, [trollRight]);
+        var userPolicy = new AccountPolicy(2, [trollRight]);
 
         // Act
         var canRefresh = userPolicy.CanRefresh(featureId, trollId);

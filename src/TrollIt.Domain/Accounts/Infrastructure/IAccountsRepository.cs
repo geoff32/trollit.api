@@ -8,4 +8,5 @@ public interface IAccountsRepository
     Task<IAccount?> GetAccountAsync(Guid id, CancellationToken cancellationToken);
     Task<IAccount?> GetAccountByLoginAsync(string login, CancellationToken cancellationToken);
     Task<IAccount?> GetAccountByTrollAsync(int trollId, CancellationToken cancellationToken);
+    Task<IAccountPolicy> GetAccountPoliciesAsync(int trollId, CancellationToken cancellationToken);
 }
