@@ -33,7 +33,7 @@ internal class ScriptsRepositoryAcl(IScriptsAcl scriptsAcl) : IScriptsRepository
             data?.Select(ToDefaultDomain) ?? []
         ));
 
-    private ScriptCounterDto ToDefaultDomain(ScriptInfo data)
+    private static ScriptCounterDto ToDefaultDomain(ScriptInfo data)
     {
         return new ScriptCounterDto
         (
@@ -49,7 +49,7 @@ internal class ScriptsRepositoryAcl(IScriptsAcl scriptsAcl) : IScriptsRepository
         );
     }
 
-    private ScriptCounterDto ToDomain(ScriptCounter data)
+    private static ScriptCounterDto ToDomain(ScriptCounter data)
     {
         return new ScriptCounterDto
         (

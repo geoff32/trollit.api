@@ -11,4 +11,4 @@ builder.AddProject<Projects.TrollIt_Api>("trollit-api")
     .WithReference(db)
     .WaitFor(db);
 
-builder.Build().Run();
+await builder.Build().RunAsync();
