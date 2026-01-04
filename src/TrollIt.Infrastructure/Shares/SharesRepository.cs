@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Npgsql;
 using System.Data;
-using System.Runtime.CompilerServices;
 using TrollIt.Domain.Shares.Abstractions;
 using TrollIt.Domain.Shares.Infrastructure;
 using TrollIt.Infrastructure.Npgsql;
@@ -14,17 +13,17 @@ namespace TrollIt.Infrastructure.Shares;
 internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAcl sharesRepositoryAcl)
     : ISharesRepository, IInternalSharesRepository
 {
-    public async Task<ISharePolicy?> GetSharePolicyAsync(Guid sharePolicyId, CancellationToken cancellationToken)
+    public async Task<IPolicy?> GetPolicyAsync(Guid policyId, CancellationToken cancellationToken)
     {
         await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
-        var data = await connection.QuerySingleOrDefaultAsync<SharePolicy>
+        var data = await connection.QuerySingleOrDefaultAsync<Policy>
         (
             new CommandDefinition
             (
-                "SELECT id, name, trolls FROM app.get_sharepolicy(@pSharePolicyId)",
-                new { psharepolicyid = sharePolicyId },
+                "SELECT id, name, trolls FROM app.get_policy(@pPolicyId)",
+                new { ppolicyid = policyId },
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
             )
@@ -32,24 +31,30 @@ internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAc
 
         return sharesRepositoryAcl.ToDomain(data);
     }
+    
+    public async Task<IEnumerable<IPolicy>> GetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken)
+    {
+        var data = await InternalGetTrollPoliciesAsync(trollId, cancellationToken);
+        return sharesRepositoryAcl.ToDomain(data);
+    }
 
-    public async Task<IEnumerable<SharePolicy>> InternalGetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Policy>> InternalGetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken)
     {
         await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
-        return await connection.QueryAsync<SharePolicy>
-                (
-                    new CommandDefinition
-                    (
-                        "SELECT id, name, trolls FROM app.get_trollsharepolicies(@pTrollId)",
-                        new { ptrollid = trollId },
-                        commandType: CommandType.Text,
-                        cancellationToken: cancellationToken
-                    )
-                );
+        return await connection.QueryAsync<Policy>
+        (
+            new CommandDefinition
+            (
+                "SELECT id, name, trolls FROM app.get_trollpolicies(@pTrollId)",
+                new { ptrollid = trollId },
+                commandType: CommandType.Text,
+                cancellationToken: cancellationToken
+            )
+        );
     }
 
-    public async Task SaveAsync(ISharePolicy sharePolicy, CancellationToken cancellationToken)
+    public async Task SaveAsync(IPolicy policy, CancellationToken cancellationToken)
     {
         await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
@@ -58,10 +63,10 @@ internal class SharesRepository(NpgsqlDataSource dataSource, ISharesRepositoryAc
         (
             new CommandDefinition
             (
-                "app.update_sharepolicy",
+                "app.update_policy",
                 new
                 {
-                    psharepolicy = new CustomTypeParameter<SharePolicy>(sharesRepositoryAcl.ToDataModel(sharePolicy), "app.sharepolicy")
+                    ppolicy = new CustomTypeParameter<Policy>(sharesRepositoryAcl.ToDataModel(policy), "app.policy")
                 },
                 commandType: CommandType.StoredProcedure,
                 cancellationToken: cancellationToken

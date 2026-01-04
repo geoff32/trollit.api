@@ -6,8 +6,8 @@ namespace TrollIt.Infrastructure.Shares.Acl.Abstractions;
 
 internal interface ISharesRepositoryAcl
 {
-    SharePolicy ToDataModel(ISharePolicy sharePolicy);
+    Policy ToDataModel(IPolicy policy);
     [return: NotNullIfNotNull(nameof(data))]
-    ISharePolicy? ToDomain(SharePolicy? data);
-    IEnumerable<ISharePolicy> ToDomain(IEnumerable<SharePolicy> data);
+    IPolicy? ToDomain(Policy? data);
+    IEnumerable<IPolicy> ToDomain(IEnumerable<Policy> data);
 }

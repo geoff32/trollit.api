@@ -6,25 +6,22 @@ namespace TrollIt.Domain.Shares.Acl;
 
 public class SharesAcl : ISharesAcl
 {
-    public ISharePolicy ToDomain(SharePolicyDto policyDto) => new SharePolicy(Initialize(policyDto));
+    public IPolicy ToDomain(PolicyDto policyDto) => new Policy(Initialize(policyDto));
+    public IInvitation ToDomain(InvitationDto invitationDto) => new Invitation(Initialize(invitationDto));
 
-    private static SharePolicyDto Initialize(SharePolicyDto sharePolicyDto)
+    private static PolicyDto Initialize(PolicyDto policyDto) =>
+        policyDto with { Members = policyDto.Members.Select(Initialize) };
+
+    private static InvitationDto Initialize(InvitationDto invitationDto) =>
+        invitationDto with { Features = Initialize(invitationDto.Features) };
+
+    private static MemberDto Initialize(MemberDto memberDto) =>
+        memberDto with { Features = Initialize(memberDto.Features) };
+
+    private static IReadOnlyCollection<FeatureDto> Initialize(IReadOnlyCollection<FeatureDto> features)
     {
-        return new SharePolicyDto(sharePolicyDto.Id, sharePolicyDto.Name, sharePolicyDto.Members.Select(Initialize));
-    }
-
-    private static MemberDto Initialize(MemberDto memberDto)
-    {
-        return new MemberDto(memberDto.Id, memberDto.Status, Initialize(memberDto.Features));
-    }
-
-    private static IEnumerable<FeatureDto> Initialize(IEnumerable<FeatureDto> features)
-    {
-        foreach (var featureId in Enum.GetValues<FeatureId>())
-        {
-            var feature = features.FirstOrDefault(f => f.Id == featureId);
-
-            yield return feature is not null ? feature : new FeatureDto(featureId, false, false);
-        }
+        return Enum.GetValues<FeatureId>().Select(featureId =>
+            features.FirstOrDefault(f => f.Id == featureId) ?? new FeatureDto(featureId, false, false))
+            .ToArray();
     }
 }

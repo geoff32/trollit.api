@@ -4,6 +4,7 @@ namespace TrollIt.Domain.Shares.Infrastructure;
 
 public interface ISharesRepository
 {
-    Task<ISharePolicy?> GetSharePolicyAsync(Guid sharePolicyId, CancellationToken cancellationToken);
-    Task SaveAsync(ISharePolicy sharePolicy, CancellationToken cancellationToken);
+    Task<IPolicy?> GetPolicyAsync(Guid policyId, CancellationToken cancellationToken);
+    Task SaveAsync(IPolicy policy, CancellationToken cancellationToken);
+    Task<IEnumerable<IPolicy>> GetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken);
 }

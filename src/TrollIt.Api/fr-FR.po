@@ -25,12 +25,16 @@ msgid "InvitationNotFound"
 msgstr "Invitation non trouvée !"
 
 msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
-msgid "InvitationAlreadyExistsInSharePolicy"
+msgid "InvitationAlreadyExistsInPolicy"
 msgstr "Le membre a déjà été invité !"
 
 msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
 msgid "IsAlreadyMember"
 msgstr "Le membre est déjà présent dans le groupe !"
+
+msgctxt "TrollIt.Domain.Shares.Exceptions.SharesExceptions"
+msgid "InvitationPolicyMismatch"
+msgstr "Le groupe ne correspond pas à celui de l'invitation !"
 
 msgctxt "TrollIt.Api.Account.AccountController"
 msgid "Invalid login or password"

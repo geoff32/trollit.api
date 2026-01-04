@@ -10,38 +10,38 @@ namespace TrollIt.Domain.Tests.Shares.Acl;
 public class SharesAclTests
 {
     [Fact]
-    public void ToDomain_ShouldReturnSharePolicy_WhenCalledWithSharePolicyDto()
+    public void ToDomain_ShouldReturnPolicy_WhenCalledWithPolicyDto()
     {
         // Arrange
         var id = Guid.NewGuid();
         var name = "Test Policy";
         var featureProfile = new FeatureDto(FeatureId.Profile, true, true);
         var featureView = new FeatureDto(FeatureId.View, true, true);
-        var sharePolicyDto = new SharePolicyDto(id, name, [new MemberDto(1, ShareStatus.Owner, [featureProfile, featureView])]);
+        var policyDto = new PolicyDto(id, name, [new MemberDto(1, PolicyStatus.Owner, [featureProfile, featureView])]);
         var sharesAcl = new SharesAcl();
 
         // Act
-        var sharePolicy = sharesAcl.ToDomain(sharePolicyDto);
+        var policy = sharesAcl.ToDomain(policyDto);
 
         // Assert
-        sharePolicy.Should().BeOfType<SharePolicy>()
-            .Which.Should().BeEquivalentTo(sharePolicyDto);
+        policy.Should().BeOfType<Policy>()
+            .Which.Should().BeEquivalentTo(policyDto);
     }
     [Fact]
-    public void ToDomain_ShouldReturnSharePolicyWithAllFeatures_WhenCalledWithSharePolicyDtoWithoutFeature()
+    public void ToDomain_ShouldReturnPolicyWithAllFeatures_WhenCalledWithPolicyDtoWithoutFeature()
     {
         // Arrange
         var id = Guid.NewGuid();
         var name = "Test Policy";
-        var sharePolicyDto = new SharePolicyDto(id, name, [new MemberDto(1, ShareStatus.Owner, [])]);
+        var policyDto = new PolicyDto(id, name, [new MemberDto(1, PolicyStatus.Owner, [])]);
         var sharesAcl = new SharesAcl();
 
         // Act
-        var sharePolicy = sharesAcl.ToDomain(sharePolicyDto);
+        var policy = sharesAcl.ToDomain(policyDto);
 
         // Assert
         var expectedFeatures = new [] {new Feature(FeatureId.Profile, false, false), new Feature(FeatureId.View, false, false)};
-        sharePolicy.Should().BeOfType<SharePolicy>()
-            .Which.Should().BeEquivalentTo(new SharePolicy(id, name, [new Member(1, ShareStatus.Owner, expectedFeatures)]));
+        policy.Should().BeOfType<Policy>()
+            .Which.Should().BeEquivalentTo(new Policy(id, name, [new Member(1, PolicyStatus.Owner, expectedFeatures)]));
     }
 }

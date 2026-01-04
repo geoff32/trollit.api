@@ -2,7 +2,7 @@
 
 namespace TrollIt.Infrastructure.Shares.Models;
 
-internal record SharePolicy()
+internal record Policy()
 {
     [PgName("id")]
     public Guid Id { get; init; } = Guid.Empty;
@@ -11,7 +11,7 @@ internal record SharePolicy()
     [PgName("trolls")]
     public TrollShare[] Trolls { get; init; } = default!;
 
-    public SharePolicy(Guid id, string name, TrollShare[] trolls) : this()
+    public Policy(Guid id, string name, TrollShare[] trolls) : this()
     {
         Id = id;
         Name = name;

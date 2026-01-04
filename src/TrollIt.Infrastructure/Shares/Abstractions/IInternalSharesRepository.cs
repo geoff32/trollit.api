@@ -4,5 +4,5 @@ namespace TrollIt.Infrastructure.Shares.Abstractions;
 
 internal interface IInternalSharesRepository
 {
-    Task<IEnumerable<SharePolicy>> InternalGetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken);
+    public Task<IEnumerable<Policy>> InternalGetTrollPoliciesAsync(int trollId, CancellationToken cancellationToken);
 }

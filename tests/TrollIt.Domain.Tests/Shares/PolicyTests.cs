@@ -8,37 +8,39 @@ using TrollIt.Domain.Shares.Exceptions;
 
 namespace TrollIt.Domain.Tests.Shares;
 
-public class SharePolicyTests
+public class PolicyTests
 {
     [Fact]
     public void AddInvitation_ShouldAddInvitation_WhenMemberDoesNotExist()
     {
         // Arrange
         var memberId = 1;
-        var sharePolicyDto = new SharePolicyDto(Guid.NewGuid(), "testName", []);
-        var sharePolicy = new SharePolicy(sharePolicyDto);
+        var policyDto = new PolicyDto(Guid.NewGuid(), "testName", []);
+        var policy = new Policy(policyDto);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        sharePolicy.AddInvitation(memberId);
+        policy.AddInvitation(invitation);
 
         // Assert
-        sharePolicy.Members.Should().ContainSingle(m => m.Id == memberId && m.Status == ShareStatus.Guest);
+        policy.Members.Should().ContainSingle(m => m.Id == memberId && m.Status == PolicyStatus.Guest);
     }
 
     [Theory]
-    [InlineData(ShareStatus.Owner)]
-    [InlineData(ShareStatus.Admin)]
-    [InlineData(ShareStatus.User)]
-    public void AddInvitation_ShouldThrowException_WhenAlreadyMember(ShareStatus shareStatus)
+    [InlineData(PolicyStatus.Owner)]
+    [InlineData(PolicyStatus.Admin)]
+    [InlineData(PolicyStatus.User)]
+    public void AddInvitation_ShouldThrowException_WhenAlreadyMember(PolicyStatus policyStatus)
     {
         // Arrange
         var memberId = 1;
-        var memberDto = new MemberDto(memberId, shareStatus, []);
-        var sharePolicyDto = new SharePolicyDto(Guid.NewGuid(), "testName", [memberDto]);
-        var sharePolicy = new SharePolicy(sharePolicyDto);
+        var memberDto = new MemberDto(memberId, policyStatus, []);
+        var policyDto = new PolicyDto(Guid.NewGuid(), "testName", [memberDto]);
+        var policy = new Policy(policyDto);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        Action act = () => sharePolicy.AddInvitation(memberId);
+        var act = () => policy.AddInvitation(invitation);
 
         // Assert
         act.Should().ThrowDomainException(SharesExceptions.IsAlreadyMember);
@@ -48,44 +50,47 @@ public class SharePolicyTests
     public void AddInvitation_ShouldThrowException_WhenInvitationAlreadyExists()
     {
         // Arrange
-        var memberId = 1;
-        var memberDto = new MemberDto(memberId, ShareStatus.Guest, []);
-        var sharePolicyDto = new SharePolicyDto(Guid.NewGuid(), "testName", [memberDto]);
-        var sharePolicy = new SharePolicy(sharePolicyDto);
+        const int memberId = 1;
+        var memberDto = new MemberDto(memberId, PolicyStatus.Guest, []);
+        var policyDto = new PolicyDto(Guid.NewGuid(), "testName", [memberDto]);
+        var policy = new Policy(policyDto);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        Action act = () => sharePolicy.AddInvitation(memberId);
+        var act = () => policy.AddInvitation(invitation);
 
         // Assert
-        act.Should().ThrowDomainException(SharesExceptions.InvitationAlreadyExistsInSharePolicy);
+        act.Should().ThrowDomainException(SharesExceptions.InvitationAlreadyExistsInPolicy);
     }
 
     [Fact]
     public void AcceptInvitation_ShouldChangeStatusToUser_WhenInvitationExists()
     {
         // Arrange
-        var memberId = 1;
+        const int memberId = 1;
         var member = Substitute.For<IMember>();
         member.Id.Returns(memberId);
         member.IsGuest.Returns(true);
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", [member]);
+        var policy = new Policy(Guid.NewGuid(), "testName", [member]);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        sharePolicy.AcceptInvitation(memberId);
+        policy.AcceptInvitation(invitation);
 
         // Assert
-        sharePolicy.Members.Should().ContainSingle(m => m.Id == memberId && m.Status == ShareStatus.User);
+        policy.Members.Should().ContainSingle(m => m.Id == memberId && m.Status == PolicyStatus.User);
     }
 
     [Fact]
     public void AcceptInvitation_ShouldThrowException_WhenInvitationDoesNotExist()
     {
         // Arrange
-        var memberId = 1;
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", []);
+        const int memberId = 1;
+        var policy = new Policy(Guid.NewGuid(), "testName", []);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        Action act = () => sharePolicy.AcceptInvitation(memberId);
+        var act = () => policy.AcceptInvitation(invitation);
 
         // Assert
         act.Should().ThrowDomainException(SharesExceptions.InvitationNotFound);
@@ -99,10 +104,11 @@ public class SharePolicyTests
         var member = Substitute.For<IMember>();
         member.Id.Returns(memberId);
         member.IsGuest.Returns(false);
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", [member]);
+        var policy = new Policy(Guid.NewGuid(), "testName", [member]);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        Action act = () => sharePolicy.AcceptInvitation(memberId);
+        var act = () => policy.AcceptInvitation(invitation);
 
         // Assert
         act.Should().ThrowDomainException(SharesExceptions.IsAlreadyMember);
@@ -116,13 +122,13 @@ public class SharePolicyTests
         var member = Substitute.For<IMember>();
         member.Id.Returns(memberId);
         member.IsGuest.Returns(false);
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", [member]);
+        var policy = new Policy(Guid.NewGuid(), "testName", [member]);
 
         // Act
-        sharePolicy.RemoveMember(memberId);
+        policy.RemoveMember(memberId);
 
         // Assert
-        sharePolicy.Members.Should().NotContain(member);
+        policy.Members.Should().NotContain(member);
     }
     
     [Fact]
@@ -130,10 +136,10 @@ public class SharePolicyTests
     {
         // Arrange
         var memberId = 1;
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", []);
+        var policy = new Policy(Guid.NewGuid(), "testName", []);
 
         // Act
-        Action act = () => sharePolicy.RemoveMember(memberId);
+        var act = () => policy.RemoveMember(memberId);
 
         // Assert
         act.Should().ThrowDomainException(SharesExceptions.MemberNotFound);
@@ -147,10 +153,10 @@ public class SharePolicyTests
         var member = Substitute.For<IMember>();
         member.Id.Returns(memberId);
         member.IsGuest.Returns(true);
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", [member]);
+        var policy = new Policy(Guid.NewGuid(), "testName", [member]);
 
         // Act
-        Action act = () => sharePolicy.RemoveMember(memberId);
+        var act = () => policy.RemoveMember(memberId);
 
         // Assert
         act.Should().ThrowDomainException(SharesExceptions.MemberNotFound);
@@ -164,13 +170,14 @@ public class SharePolicyTests
         var member = Substitute.For<IMember>();
         member.Id.Returns(memberId);
         member.IsGuest.Returns(true);
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", [member]);
+        var policy = new Policy(Guid.NewGuid(), "testName", [member]);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        sharePolicy.RemoveInvitation(memberId);
+        policy.RemoveInvitation(invitation);
 
         // Assert
-        sharePolicy.Members.Should().NotContain(member);
+        policy.Members.Should().NotContain(member);
     }
     
     [Fact]
@@ -181,10 +188,11 @@ public class SharePolicyTests
         var member = Substitute.For<IMember>();
         member.Id.Returns(memberId);
         member.IsGuest.Returns(false);
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "testName", [member]);
+        var policy = new Policy(Guid.NewGuid(), "testName", [member]);
+        var invitation = new Invitation(policy.Id, memberId, []);
 
         // Act
-        Action act = () => sharePolicy.RemoveInvitation(memberId);
+        var act = () => policy.RemoveInvitation(invitation);
 
         // Assert
         act.Should().ThrowDomainException(SharesExceptions.IsAlreadyMember);

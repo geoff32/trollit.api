@@ -7,5 +7,5 @@ namespace TrollIt.Infrastructure.Accounts.Acl.Abstractions;
 internal interface IAccountsRepositoryAcl
 {
     IAccount? ToDomain(Account? account);
-    IAccountPolicy ToDomain(int trollId, IEnumerable<SharePolicy> sharePolicies);
+    IAccountPolicy ToDomain(int trollId, IEnumerable<Policy> policies);
 }

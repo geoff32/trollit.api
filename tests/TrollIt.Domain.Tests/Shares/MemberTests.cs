@@ -11,7 +11,7 @@ public class MemberTests
     public void Constructor_ShouldSetProperties_WhenCalledWithMemberDto()
     {
         // Arrange
-        var memberDto = new MemberDto(1, ShareStatus.User, [new FeatureDto(FeatureId.Profile, false, false)]);
+        var memberDto = new MemberDto(1, PolicyStatus.User, [new FeatureDto(FeatureId.Profile, false, false)]);
 
         // Act
         var member = new Member(memberDto);
@@ -26,7 +26,7 @@ public class MemberTests
     public void IsGuest_ShouldReturnTrue_WhenStatusIsGuest()
     {
         // Arrange
-        var member = new Member(1, ShareStatus.Guest, []);
+        var member = new Member(1, PolicyStatus.Guest, []);
 
         // Act
         var isGuest = member.IsGuest;
@@ -39,7 +39,7 @@ public class MemberTests
     public void IsGuest_ShouldReturnFalse_WhenStatusIsNotGuest()
     {
         // Arrange
-        var member = new Member(1, ShareStatus.User, []);
+        var member = new Member(1, PolicyStatus.User, []);
 
         // Act
         var isGuest = member.IsGuest;

@@ -15,14 +15,14 @@ internal class AccountsRepositoryAcl(IAccountsAcl accountAcl) : IAccountsReposit
             new AccountDto(account.Id, account.Login, new TrollDto(account.TrollId, account.TrollName, account.ScriptToken)),
             account.Password);
 
-    public IAccountPolicy ToDomain(int trollId, IEnumerable<SharePolicy> sharePolicies)
+    public IAccountPolicy ToDomain(int trollId, IEnumerable<Policy> policies)
     {
-        return accountAcl.ToDomain(new AccountPolicyDto(trollId, MergeToRights(sharePolicies.SelectMany(sharePolicy => sharePolicy.Trolls))));
+        return accountAcl.ToDomain(new AccountPolicyDto(trollId, MergeToRights(policies.SelectMany(policy => policy.Trolls))));
     }
 
     private static IEnumerable<TrollRightDto> MergeToRights(IEnumerable<TrollShare> trolls)
     {
-        return trolls.Where(troll => troll.Status != ShareStatus.Guest)
+        return trolls.Where(troll => troll.Status != PolicyStatus.Guest)
             .GroupBy(troll => troll.Trollid)
             .Select(memberRights => new TrollRightDto(memberRights.Key, Initialize(MergeToDto(memberRights.SelectMany(m => m.Features)))));
     }

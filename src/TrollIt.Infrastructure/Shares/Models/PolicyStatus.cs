@@ -2,7 +2,7 @@
 
 namespace TrollIt.Infrastructure.Shares.Models;
 
-internal enum ShareStatus
+internal enum PolicyStatus
 {
     [PgName("owner")]
     Owner,

@@ -24,11 +24,11 @@ public class SharesServiceTests
     }
 
     [Fact]
-    public async Task CreateSharePolicyAsync_ShouldCreatePolicy()
+    public async Task CreatePolicyAsync_ShouldCreatePolicy()
     {
         // Arrange
         var user = new AppUser(Guid.NewGuid(), 1, "accountId");
-        var request = new CreateSharePolicyRequest
+        var request = new CreatePolicyRequest
         (
             Name: "Test",
             Features: new FeatureSettingsRequest(
@@ -40,133 +40,133 @@ public class SharesServiceTests
         var memberDto = new MemberDto
         (
             Id: user.TrollId,
-            Status: ShareStatus.Owner,
+            Status: PolicyStatus.Owner,
             Features: [
                 new FeatureDto(Id: FeatureId.Profile, CanRead: true, CanRefresh: true),
                 new FeatureDto(Id: FeatureId.View, CanRead: true, CanRefresh: true)
             ]
         );
-        var sharePolicyDto = new SharePolicyDto
+        var policyDto = new PolicyDto
         (
             Id: Guid.NewGuid(),
             Name: request.Name,
             Members: [memberDto]
         );
-        var expectedSharePolicy = ToDomain(sharePolicyDto);
+        var expectedPolicy = ToDomain(policyDto);
 
-        _sharesAcl.ToDomain(Arg.Any<SharePolicyDto>()).Returns(expectedSharePolicy);
+        _sharesAcl.ToDomain(Arg.Any<PolicyDto>()).Returns(expectedPolicy);
 
         // Act
-        var result = await _sharesService.CreateSharePolicyAsync(user, request, cancellationToken);
+        var result = await _sharesService.CreatePolicyAsync(user, request, cancellationToken);
 
         // Assert
-        await _sharesRepository.Received(1).SaveAsync(expectedSharePolicy, cancellationToken);
-        result.Should().BeEquivalentTo(new SharePolicyResponse(expectedSharePolicy));
+        await _sharesRepository.Received(1).SaveAsync(expectedPolicy, cancellationToken);
+        result.Should().BeEquivalentTo(new PolicyResponse(expectedPolicy));
     }
 
     [Fact]
-    public async Task GetSharePolicyAsync_WhenUserBelongsToPolicyAndIsNotGuest_ReturnsExpectedSharePolicyResponse()
+    public async Task GetPolicyAsync_WhenUserBelongsToPolicyAndIsNotGuest_ReturnsExpectedPolicyResponse()
     {
         // Arrange
         var sharesRepository = Substitute.For<ISharesRepository>();
-        var sharePolicyId = Guid.NewGuid();
+        var policyId = Guid.NewGuid();
         var cancellationToken = new CancellationToken();
         var user = new AppUser(Guid.NewGuid(), 1, "accountId");
-        var sharePolicy = Substitute.For<ISharePolicy>();
-        sharePolicy.Id.Returns(sharePolicyId);
-        sharePolicy.Name.Returns("Name");
+        var policy = Substitute.For<IPolicy>();
+        policy.Id.Returns(policyId);
+        policy.Name.Returns("Name");
         var member = Substitute.For<IMember>();
         member.IsGuest.Returns(false);
-        sharePolicy.GetMember(user.TrollId).Returns(member);
+        policy.GetMember(user.TrollId).Returns(member);
 
-        var expectedSharePolicyResponse = new SharePolicyResponse(sharePolicy);
+        var expectedPolicyResponse = new PolicyResponse(policy);
 
-        sharesRepository.GetSharePolicyAsync(sharePolicyId, cancellationToken).Returns(sharePolicy);
+        sharesRepository.GetPolicyAsync(policyId, cancellationToken).Returns(policy);
         var sharesService = new SharesService(sharesRepository, Substitute.For<ISharesAcl>());
 
         // Act
-        var result = await sharesService.GetSharePolicyAsync(user, sharePolicyId, cancellationToken);
+        var result = await sharesService.GetPolicyAsync(user, policyId, cancellationToken);
 
         // Assert
-        result.Should().BeEquivalentTo(expectedSharePolicyResponse);
+        result.Should().BeEquivalentTo(expectedPolicyResponse);
     }
 
     [Fact]
-    public async Task GetSharePolicyAsync_WhenNotExists_ReturnsNull()
+    public async Task GetPolicyAsync_WhenNotExists_ReturnsNull()
     {
         // Arrange
         var sharesRepository = Substitute.For<ISharesRepository>();
-        var sharePolicyId = Guid.NewGuid();
+        var policyId = Guid.NewGuid();
         var cancellationToken = new CancellationToken();
         var user = new AppUser(Guid.NewGuid(), 1, "accountId");
 
-        sharesRepository.GetSharePolicyAsync(sharePolicyId, cancellationToken).ReturnsNull();
+        sharesRepository.GetPolicyAsync(policyId, cancellationToken).ReturnsNull();
         var sharesService = new SharesService(sharesRepository, Substitute.For<ISharesAcl>());
 
         // Act
-        var result = await sharesService.GetSharePolicyAsync(user, sharePolicyId, cancellationToken);
-
-        // Assert
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task GetSharePolicyAsync_WhenUserNotBelongsToPolicy_ReturnsNull()
-    {
-        // Arrange
-        var sharesRepository = Substitute.For<ISharesRepository>();
-        var sharePolicyId = Guid.NewGuid();
-        var cancellationToken = new CancellationToken();
-        var user = new AppUser(Guid.NewGuid(), 1, "accountId");
-        var sharePolicy = Substitute.For<ISharePolicy>();
-        sharePolicy.Id.Returns(sharePolicyId);
-        sharePolicy.Name.Returns("Name");
-        sharePolicy.GetMember(user.TrollId).ReturnsNull();
-
-        sharesRepository.GetSharePolicyAsync(sharePolicyId, cancellationToken).Returns(sharePolicy);
-        var sharesService = new SharesService(sharesRepository, Substitute.For<ISharesAcl>());
-
-        // Act
-        var result = await sharesService.GetSharePolicyAsync(user, sharePolicyId, cancellationToken);
+        var result = await sharesService.GetPolicyAsync(user, policyId, cancellationToken);
 
         // Assert
         result.Should().BeNull();
     }
 
     [Fact]
-
-    public async Task GetSharePolicyAsync_WhenUserIsOnlyGuest_ReturnsNulls()
+    public async Task GetPolicyAsync_WhenUserNotBelongsToPolicy_ReturnsNull()
     {
         // Arrange
         var sharesRepository = Substitute.For<ISharesRepository>();
-        var sharePolicyId = Guid.NewGuid();
+        var policyId = Guid.NewGuid();
         var cancellationToken = new CancellationToken();
         var user = new AppUser(Guid.NewGuid(), 1, "accountId");
-        var sharePolicy = Substitute.For<ISharePolicy>();
-        sharePolicy.Id.Returns(sharePolicyId);
-        sharePolicy.Name.Returns("Name");
+        var policy = Substitute.For<IPolicy>();
+        policy.Id.Returns(policyId);
+        policy.Name.Returns("Name");
+        policy.GetMember(user.TrollId).ReturnsNull();
+
+        sharesRepository.GetPolicyAsync(policyId, cancellationToken).Returns(policy);
+        var sharesService = new SharesService(sharesRepository, Substitute.For<ISharesAcl>());
+
+        // Act
+        var result = await sharesService.GetPolicyAsync(user, policyId, cancellationToken);
+
+        // Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+
+    public async Task GetPolicyAsync_WhenUserIsOnlyGuest_ReturnsNulls()
+    {
+        // Arrange
+        var sharesRepository = Substitute.For<ISharesRepository>();
+        var policyId = Guid.NewGuid();
+        var cancellationToken = new CancellationToken();
+        var user = new AppUser(Guid.NewGuid(), 1, "accountId");
+        var policy = Substitute.For<IPolicy>();
+        policy.Id.Returns(policyId);
+        policy.Name.Returns("Name");
         var member = Substitute.For<IMember>();
         member.IsGuest.Returns(true);
-        sharePolicy.GetMember(user.TrollId).Returns(member);
+        policy.GetMember(user.TrollId).Returns(member);
 
-        sharesRepository.GetSharePolicyAsync(sharePolicyId, cancellationToken).Returns(sharePolicy);
+        sharesRepository.GetPolicyAsync(policyId, cancellationToken).Returns(policy);
         var sharesService = new SharesService(sharesRepository, Substitute.For<ISharesAcl>());
 
         // Act
-        var result = await sharesService.GetSharePolicyAsync(user, sharePolicyId, cancellationToken);
+        var result = await sharesService.GetPolicyAsync(user, policyId, cancellationToken);
 
         // Assert
         result.Should().BeNull();
     }
 
-    private static ISharePolicy ToDomain(SharePolicyDto sharePolicyDto)
+    private static IPolicy ToDomain(PolicyDto policyDto)
     {
-        var expectedSharePolicy = Substitute.For<ISharePolicy>();
-        expectedSharePolicy.Id.Returns(sharePolicyDto.Id);
-        expectedSharePolicy.Name.Returns(sharePolicyDto.Name);
-        var expectedMembers = sharePolicyDto.Members.Select(ToDomain).ToArray();
-        expectedSharePolicy.Members.Returns(expectedMembers);
-        return expectedSharePolicy;
+        var expectedPolicy = Substitute.For<IPolicy>();
+        expectedPolicy.Id.Returns(policyDto.Id);
+        expectedPolicy.Name.Returns(policyDto.Name);
+        var expectedMembers = policyDto.Members.Select(ToDomain).ToArray();
+        expectedPolicy.Members.Returns(expectedMembers);
+        return expectedPolicy;
     }
 
     private static IMember ToDomain(MemberDto memberDto)

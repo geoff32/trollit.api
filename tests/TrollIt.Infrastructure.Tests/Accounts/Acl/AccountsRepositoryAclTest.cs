@@ -29,18 +29,18 @@ public class AccountsRepositoryAclTest
     [InlineData(FeatureStatus.Read, FeatureStatus.Inactive)]
     [InlineData(FeatureStatus.Read, FeatureStatus.Readwrite)]
     [InlineData(FeatureStatus.Read, FeatureStatus.Read)]
-    internal void ToDomain_ShouldMergeRights_WhenCalledWithTrollIdAndMultipleSharePolicies(FeatureStatus status1, FeatureStatus status2)
+    internal void ToDomain_ShouldMergeRights_WhenCalledWithTrollIdAndMultiplePolicies(FeatureStatus status1, FeatureStatus status2)
     {
         // Arrange
         var trollId = 1;
-        var sharePolicy = new SharePolicy(Guid.NewGuid(), "Test Policy", [new TrollShare(2, ShareStatus.Owner, [new TrollFeature(Shares.Models.FeatureId.Profile, status1)])]);
-        var sharePolicy2 = new SharePolicy(Guid.NewGuid(), "Test Policy2", [new TrollShare(2, ShareStatus.Owner, [new TrollFeature(Shares.Models.FeatureId.Profile, status2)])]);
-        var sharePolicies = new SharePolicy[] { sharePolicy, sharePolicy2 };
+        var policy = new Policy(Guid.NewGuid(), "Test Policy", [new TrollShare(2, PolicyStatus.Owner, [new TrollFeature(Shares.Models.FeatureId.Profile, status1)])]);
+        var policy2 = new Policy(Guid.NewGuid(), "Test Policy2", [new TrollShare(2, PolicyStatus.Owner, [new TrollFeature(Shares.Models.FeatureId.Profile, status2)])]);
+        var policies = new Policy[] { policy, policy2 };
 
-        var accountsRepositorysAcl = new AccountsRepositoryAcl(new AccountsAcl(_passwordEncryptor));
+        var accountsRepositoryAcl = new AccountsRepositoryAcl(new AccountsAcl(_passwordEncryptor));
 
         // Act
-        var accountPolicy = accountsRepositorysAcl.ToDomain(trollId, sharePolicies);
+        var accountPolicy = accountsRepositoryAcl.ToDomain(trollId, policies);
 
         // Assert
         accountPolicy.Should().BeOfType<AccountPolicy>()

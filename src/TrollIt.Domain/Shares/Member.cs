@@ -3,7 +3,7 @@ using TrollIt.Domain.Shares.Acl.Models;
 
 namespace TrollIt.Domain.Shares;
 
-internal record Member(int Id, ShareStatus Status, IEnumerable<IFeature> Features) : IMember
+internal record Member(int Id, PolicyStatus Status, IEnumerable<IFeature> Features) : IMember
 {
     public Member(MemberDto memberDto)
         : this
@@ -15,5 +15,5 @@ internal record Member(int Id, ShareStatus Status, IEnumerable<IFeature> Feature
     {
     }
 
-    public bool IsGuest => Status == ShareStatus.Guest;
+    public bool IsGuest => Status == PolicyStatus.Guest;
 }

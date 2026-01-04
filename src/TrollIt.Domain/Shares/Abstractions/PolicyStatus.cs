@@ -1,6 +1,6 @@
 ﻿namespace TrollIt.Domain.Shares.Abstractions;
 
-public enum ShareStatus
+public enum PolicyStatus
 {
     Owner,
     Admin,

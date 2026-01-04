@@ -8,10 +8,10 @@ internal static class NpgsqlSharesExtensions
     {
         dataSourceBuilder.MapEnum<FeatureId>("app.featureid");
         dataSourceBuilder.MapEnum<FeatureStatus>("app.featurestatus");
-        dataSourceBuilder.MapEnum<ShareStatus>("app.sharestatus");
+        dataSourceBuilder.MapEnum<PolicyStatus>("app.policystatus");
         dataSourceBuilder.MapComposite<TrollFeature>("app.trollfeature");
         dataSourceBuilder.MapComposite<TrollShare>("app.trollshare");
-        dataSourceBuilder.MapComposite<SharePolicy>("app.sharepolicy");
+        dataSourceBuilder.MapComposite<Policy>("app.policy");
 
         return dataSourceBuilder;
     }

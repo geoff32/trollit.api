@@ -9,16 +9,16 @@ namespace TrollIt.Infrastructure.Shares.Acl;
 
 internal class SharesRepositoryAcl(ISharesAcl sharesAcl) : ISharesRepositoryAcl
 {
-    public SharePolicy ToDataModel(ISharePolicy sharePolicy) =>
-        new(sharePolicy.Id, sharePolicy.Name, sharePolicy.Members.Select(ToDataModel).ToArray());
+    public Policy ToDataModel(IPolicy policy) =>
+        new(policy.Id, policy.Name, policy.Members.Select(ToDataModel).ToArray());
 
     [return: NotNullIfNotNull(nameof(data))]
-    public ISharePolicy? ToDomain(SharePolicy? data) => 
+    public IPolicy? ToDomain(Policy? data) => 
         data == null
             ? null
             : sharesAcl.ToDomain(ToDto(data));
 
-    public IEnumerable<ISharePolicy> ToDomain(IEnumerable<SharePolicy> data) => data.Select(d => ToDomain(d));
+    public IEnumerable<IPolicy> ToDomain(IEnumerable<Policy> data) => data.Select(d => ToDomain(d));
 
     private static TrollShare ToDataModel(IMember member)
     {
@@ -37,12 +37,12 @@ internal class SharesRepositoryAcl(ISharesAcl sharesAcl) : ISharesRepositoryAcl
         _ => throw new ArgumentOutOfRangeException(nameof(id), id, null)
     };
 
-    private static Models.ShareStatus ToDataModel(Domain.Shares.Abstractions.ShareStatus status) => status switch
+    private static Models.PolicyStatus ToDataModel(Domain.Shares.Abstractions.PolicyStatus status) => status switch
     {
-        Domain.Shares.Abstractions.ShareStatus.Owner => Models.ShareStatus.Owner,
-        Domain.Shares.Abstractions.ShareStatus.Admin => Models.ShareStatus.Admin,
-        Domain.Shares.Abstractions.ShareStatus.User => Models.ShareStatus.User,
-        Domain.Shares.Abstractions.ShareStatus.Guest => Models.ShareStatus.Guest,
+        Domain.Shares.Abstractions.PolicyStatus.Owner => Models.PolicyStatus.Owner,
+        Domain.Shares.Abstractions.PolicyStatus.Admin => Models.PolicyStatus.Admin,
+        Domain.Shares.Abstractions.PolicyStatus.User => Models.PolicyStatus.User,
+        Domain.Shares.Abstractions.PolicyStatus.Guest => Models.PolicyStatus.Guest,
         _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
     };
 
@@ -60,13 +60,13 @@ internal class SharesRepositoryAcl(ISharesAcl sharesAcl) : ISharesRepositoryAcl
         return FeatureStatus.Inactive;
     }
 
-    private static SharePolicyDto ToDto(SharePolicy data) => new(data.Id, data.Name, data.Trolls.Select(ToDto));
+    private static PolicyDto ToDto(Policy data) => new(data.Id, data.Name, data.Trolls.Select(ToDto));
 
     private static MemberDto ToDto(TrollShare member) => new
     (
         member.Trollid,
         ToDomain(member.Status),
-        member.Features.Select(feature => new FeatureDto(ToDomain(feature.Id), CanRead(feature.Status), CanRefresh(feature.Status)))
+        [.. member.Features.Select(feature => new FeatureDto(ToDomain(feature.Id), CanRead(feature.Status), CanRefresh(feature.Status)))]
     );
 
     private static Domain.Shares.Abstractions.FeatureId ToDomain(Models.FeatureId id) => id switch
@@ -76,12 +76,12 @@ internal class SharesRepositoryAcl(ISharesAcl sharesAcl) : ISharesRepositoryAcl
         _ => throw new ArgumentOutOfRangeException(nameof(id), id, null),
     };
 
-    private static Domain.Shares.Abstractions.ShareStatus ToDomain(Models.ShareStatus status) => status switch
+    private static Domain.Shares.Abstractions.PolicyStatus ToDomain(Models.PolicyStatus status) => status switch
     {
-        Models.ShareStatus.Owner => Domain.Shares.Abstractions.ShareStatus.Owner,
-        Models.ShareStatus.Admin => Domain.Shares.Abstractions.ShareStatus.Admin,
-        Models.ShareStatus.User => Domain.Shares.Abstractions.ShareStatus.User,
-        Models.ShareStatus.Guest => Domain.Shares.Abstractions.ShareStatus.Guest,
+        Models.PolicyStatus.Owner => Domain.Shares.Abstractions.PolicyStatus.Owner,
+        Models.PolicyStatus.Admin => Domain.Shares.Abstractions.PolicyStatus.Admin,
+        Models.PolicyStatus.User => Domain.Shares.Abstractions.PolicyStatus.User,
+        Models.PolicyStatus.Guest => Domain.Shares.Abstractions.PolicyStatus.Guest,
         _ => throw new ArgumentOutOfRangeException(nameof(status), status, null),
     };
 

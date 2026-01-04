@@ -5,11 +5,15 @@ using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Infrastructure.Accounts.Acl.Abstractions;
 using TrollIt.Infrastructure.Accounts.Models;
+using TrollIt.Infrastructure.Shares.Abstractions;
 using TrollIt.Infrastructure.Shares.Models;
 
 namespace TrollIt.Infrastructure.Accounts;
 
-internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsRepositoryAcl accountRepositoryAcl) : IAccountsRepository
+internal class AccountsRepository(
+    NpgsqlDataSource dataSource,
+    IAccountsRepositoryAcl accountRepositoryAcl,
+    IInternalSharesRepository sharesRepository) : IAccountsRepository
 {
     public async Task CreateAccountAsync(IAccount account, CancellationToken cancellationToken)
     {
@@ -95,18 +99,7 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 
     public async Task<IAccountPolicy> GetAccountPoliciesAsync(int trollId, CancellationToken cancellationToken)
     {
-        await using var connection = dataSource.CreateConnection();
-        await connection.OpenAsync(cancellationToken);
-        var data = await connection.QueryAsync<SharePolicy>
-                (
-                    new CommandDefinition
-                    (
-                        "SELECT id, name, trolls FROM app.get_trollsharepolicies(@pTrollId)",
-                        new { ptrollid = trollId },
-                        commandType: CommandType.Text,
-                        cancellationToken: cancellationToken
-                    )
-                );
+        var data = await sharesRepository.InternalGetTrollPoliciesAsync(trollId, cancellationToken);
 
         return accountRepositoryAcl.ToDomain(trollId, data);
     }

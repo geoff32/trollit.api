@@ -5,6 +5,7 @@ namespace TrollIt.Domain.Shares.Acl.Abstractions
 {
     public interface ISharesAcl
     {
-        ISharePolicy ToDomain(SharePolicyDto policyDto);
+        IPolicy ToDomain(PolicyDto policyDto);
+        IInvitation ToDomain(InvitationDto invitationDto);
     }
 }
