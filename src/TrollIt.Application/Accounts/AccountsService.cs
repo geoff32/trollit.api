@@ -20,7 +20,7 @@ internal class AccountsService
 {
     public async Task<AccountResponse> CreateAccountAsync(CreateAccountRequest accountRequest, CancellationToken cancellationToken)
     {
-        var trollInfos = await trollBestiary.GetTrollAsync(accountRequest.TrollId)
+        var trollInfos = await trollBestiary.GetTrollAsync(accountRequest.TrollId, cancellationToken)
             ?? throw new AppException<AccountExceptions>(AccountExceptions.TrollUnknown);
 
         var existingAccount = await accountsRepository.GetAccountByLoginAsync(accountRequest.UserName, cancellationToken);

@@ -2,6 +2,6 @@
 
 public enum ScriptsExceptions
 {
-    UnkownScript,
+    UnknownScript,
     MaxCallScript
 }

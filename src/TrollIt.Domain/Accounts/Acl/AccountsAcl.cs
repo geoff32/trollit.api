@@ -12,4 +12,7 @@ internal class AccountsAcl(IPasswordEncryptor passwordEncryptor) : IAccountsAcl
 
     public IAccount ToDomain(AccountDto accountDto, string password)
         => new Account(accountDto, password, passwordEncryptor);
+
+    public IAccountPolicy ToDomain(AccountPolicyDto accountPolicyDto)
+        => new AccountPolicy(accountPolicyDto);
 }

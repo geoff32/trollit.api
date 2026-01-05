@@ -4,6 +4,7 @@ using TrollIt.Domain.Accounts;
 using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Acl.Models;
 using TrollIt.Domain.Accounts.Infrastructure;
+using TrollIt.Domain.Shares.Abstractions;
 
 namespace TrollIt.Domain.Tests;
 

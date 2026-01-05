@@ -1,4 +1,5 @@
 using FluentAssertions;
+using FluentAssertions.Specialized;
 using TrollIt.Domain.Scripts;
 using TrollIt.Domain.Scripts.Abstractions;
 using TrollIt.Domain.Scripts.Acl.Models;
@@ -39,6 +40,6 @@ public class ScriptCounterTests
         Action act = () => scriptCounter.EnsureAccess();
 
         // Assert
-        act.Should().Throw<DomainException<ScriptsExceptions>>().WithMessage("*MaxCallScript*");
+        act.Should().ThrowDomainException(ScriptsExceptions.MaxCallScript);
     }
 }

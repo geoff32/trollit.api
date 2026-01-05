@@ -1,0 +1,23 @@
+name: 'Sonar setup'
+description: 'Install SonarCloud scanner'
+inputs:
+  collect-coverage:
+    description: 'True for collect test coverage'
+    required: true
+    default: false
+    type: boolean
+runs:
+  using: "composite"
+  steps:
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: 'zulu' # Alternative distribution options are available.
+    - name: Install SonarCloud scanner
+      shell: bash
+      run: dotnet tool install --global dotnet-sonarscanner
+    - name: Install dotnet-coverage
+      shell: bash
+      if: ${{ inputs.collect-coverage }}
+      run: dotnet tool install --global dotnet-coverage

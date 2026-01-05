@@ -1,24 +1,65 @@
-name: .NET
-
+name: Build .NET
+description: 'Build a .Net project'
 on:
-  push:
-    branches:
-      - feature/*
+  workflow_call:
+    inputs:
+      sonar:
+        description: 'True for sonar execution'
+        required: true
+        default: false
+        type: boolean
+      publish:
+        description: 'True for publish'
+        required: true
+        default: false
+        type: boolean
+    secrets:
+      sonar-token:
+        description: 'Sonar token'
+        required: true
+      github-token:
+        description: 'Github token'
+        required: true
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Setup Sonar
+        if: ${{ inputs.sonar }}
+        uses: ./.github/actions/sonar-setup
+        with:
+          collect-coverage: true
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Start Sonar Analyze
+        if: ${{ inputs.sonar }}
+        run: dotnet sonarscanner begin /k:"geoff32_trollit.api" /o:"geoff32" /d:sonar.token="${{ secrets.sonar-token }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml"
+      - name: Build
+        run: dotnet build --no-restore -c Release
+      - name: Test
+        if: ${{ ! inputs.sonar }}
+        run: dotnet test --no-build -c Release --verbosity normal
+      - name: Test with Sonar
+        if: ${{ inputs.sonar }}
+        run: dotnet-coverage collect 'dotnet test --no-build -c Release --verbosity normal' -f xml  -o 'coverage.xml'
+      - name: End Sonar Analyze
+        if: ${{ inputs.sonar }}
+        env:
+          github-token: ${{ secrets.github-token }}
+        run: |
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.sonar-token }}"
+      - name: Publish
+        if: ${{ inputs.publish }}
+        run: dotnet publish ./src/TrollIt.Api/TrollIt.Api.csproj --no-restore --no-build -c Release --output ./app
+      - name: Upload artifact
+        if: ${{ inputs.publish }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: ./app

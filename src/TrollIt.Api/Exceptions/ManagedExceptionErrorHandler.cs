@@ -8,9 +8,13 @@ using Microsoft.Extensions.Localization;
 
 namespace TrollIt.Api.Exceptions;
 
-public class ManagedExceptionErrorHandler(ProblemDetailsFactory problemDetailsFactory, IProblemDetailsService problemDetailsService, IStringLocalizerFactory stringLocalizerFactory) : IExceptionHandler
+public class ManagedExceptionErrorHandler(
+    ProblemDetailsFactory problemDetailsFactory,
+    IProblemDetailsService problemDetailsService,
+    IStringLocalizerFactory stringLocalizerFactory) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception,
+        CancellationToken cancellationToken)
     {
         if (TryGetManagedException(exception, out var managedException))
         {
@@ -26,9 +30,11 @@ public class ManagedExceptionErrorHandler(ProblemDetailsFactory problemDetailsFa
         });
     }
 
-    private static bool TryGetManagedException(Exception? exception, [NotNullWhen(true)] out ManagedException? managedException)
+    private static bool TryGetManagedException(Exception? exception,
+        [NotNullWhen(true)] out ManagedException? managedException)
     {
-        if (exception == null) {
+        if (exception == null)
+        {
             managedException = null;
             return false;
         }
@@ -42,7 +48,8 @@ public class ManagedExceptionErrorHandler(ProblemDetailsFactory problemDetailsFa
         return TryGetManagedException(exception.InnerException, out managedException);
     }
 
-    private async ValueTask<bool> TryWriteAsync(HttpContext httpContext, Exception exception, ManagedException managedException)
+    private async ValueTask<bool> TryWriteAsync(HttpContext httpContext, Exception exception,
+        ManagedException managedException)
     {
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext

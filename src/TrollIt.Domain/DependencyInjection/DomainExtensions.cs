@@ -6,6 +6,7 @@ public static class DomainExtensions
     {
         services.AddAccount();
         services.AddBestiaries();
+        services.AddShares();
         services.AddProfiles();
         services.AddScripts();
     }

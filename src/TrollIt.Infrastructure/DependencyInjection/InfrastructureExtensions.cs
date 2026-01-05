@@ -14,6 +14,7 @@ public static class InfrastructureExtensions
         {
             builder.MapProfiles();
             builder.MapScripts();
+            builder.MapShares();
         });
 
         services.AddMemoryCache();
@@ -24,5 +25,6 @@ public static class InfrastructureExtensions
         services.AddBestiaries();
         services.AddProfiles();
         services.AddScripts();
+        services.AddShares();
     }
 }

@@ -28,7 +28,7 @@ public class ScriptsServiceTests
         await _scriptsService.CleanAsync(CancellationToken.None);
 
         // Assert
-        await _scriptRepository.Received().CleanHistoryAsync(Arg.Is<DateTimeOffset>(date => date.Date == expectedDate.Date));
+        await _scriptRepository.Received().CleanHistoryAsync(Arg.Is<DateTimeOffset>(date => date.Date == expectedDate.Date), Arg.Any<CancellationToken>());
     }
 
     [Fact]

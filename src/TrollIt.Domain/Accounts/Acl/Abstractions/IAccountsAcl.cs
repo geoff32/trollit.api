@@ -7,4 +7,5 @@ public interface IAccountsAcl
 {
     IAccount ToDomain(AccountDto accountDto, IEnumerable<byte> encryptedPassword);
     IAccount ToDomain(AccountDto accountDto, string password);
+    IAccountPolicy ToDomain(AccountPolicyDto accountPolicyDto);
 }

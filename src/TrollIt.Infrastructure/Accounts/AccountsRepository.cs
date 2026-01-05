@@ -1,18 +1,23 @@
-﻿using System.Data;
-using Dapper;
+﻿using Dapper;
 using Npgsql;
+using System.Data;
 using TrollIt.Domain.Accounts.Abstractions;
 using TrollIt.Domain.Accounts.Infrastructure;
 using TrollIt.Infrastructure.Accounts.Acl.Abstractions;
 using TrollIt.Infrastructure.Accounts.Models;
+using TrollIt.Infrastructure.Shares.Abstractions;
+using TrollIt.Infrastructure.Shares.Models;
 
 namespace TrollIt.Infrastructure.Accounts;
 
-internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsRepositoryAcl accountRepositoryAcl) : IAccountsRepository
+internal class AccountsRepository(
+    NpgsqlDataSource dataSource,
+    IAccountsRepositoryAcl accountRepositoryAcl,
+    IInternalSharesRepository sharesRepository) : IAccountsRepository
 {
     public async Task CreateAccountAsync(IAccount account, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         await connection.ExecuteAsync
@@ -37,14 +42,14 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 
     public async Task<IAccount?> GetAccountAsync(Guid id, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Account>
         (
             new CommandDefinition
             (
-                "SELECT * FROM app.get_account(@pId)",
+                "SELECT id, login, password, trollid, trollname, scripttoken FROM app.get_account(@pId)",
                 new { pid = id },
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
@@ -56,14 +61,14 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
 
     public async Task<IAccount?> GetAccountByLoginAsync(string login, CancellationToken cancellationToken)
     {
-        using var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Account>
         (
             new CommandDefinition
             (
-                "SELECT * FROM app.get_account_bylogin(@pLogin)",
+                "SELECT id, login, password, trollid, trollname, scripttoken FROM app.get_account_bylogin(@pLogin)",
                 new { plogin = login },
                 commandType: CommandType.Text,
                 cancellationToken: cancellationToken
@@ -71,5 +76,31 @@ internal class AccountsRepository(NpgsqlDataSource dataSource, IAccountsReposito
         );
 
         return accountRepositoryAcl.ToDomain(data);
+    }
+
+    public async Task<IAccount?> GetAccountByTrollAsync(int trollId, CancellationToken cancellationToken)
+    {
+        await using var connection = dataSource.CreateConnection();
+        await connection.OpenAsync(cancellationToken);
+
+        var data = await connection.QuerySingleOrDefaultAsync<Account>
+        (
+            new CommandDefinition
+            (
+                "SELECT id, login, password, trollid, trollname, scripttoken FROM app.get_account_bytroll(@pTrollId)",
+                new { ptrollid = trollId },
+                commandType: CommandType.Text,
+                cancellationToken: cancellationToken
+            )
+        );
+
+        return accountRepositoryAcl.ToDomain(data);
+    }
+
+    public async Task<IAccountPolicy> GetAccountPoliciesAsync(int trollId, CancellationToken cancellationToken)
+    {
+        var data = await sharesRepository.InternalGetTrollPoliciesAsync(trollId, cancellationToken);
+
+        return accountRepositoryAcl.ToDomain(trollId, data);
     }
 }

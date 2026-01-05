@@ -6,7 +6,7 @@ namespace TrollIt.Application.Scripts;
 internal class ScriptsService(IScriptRepository scriptRepository) : IScriptsService
 {
     public Task CleanAsync(CancellationToken stoppingToken) =>
-        scriptRepository.CleanHistoryAsync(DateTimeOffset.UtcNow.AddDays(-2));
+        scriptRepository.CleanHistoryAsync(DateTimeOffset.UtcNow.AddDays(-2), stoppingToken);
 
     public async Task TraceAsync(int trollId, string scriptPath, CancellationToken cancellationToken)
     {

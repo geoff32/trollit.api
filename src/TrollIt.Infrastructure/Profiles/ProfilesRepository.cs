@@ -18,7 +18,7 @@ internal class ProfilesRepository
 {
     public async Task<IProfile?> GetProfileAsync(int trollId, CancellationToken cancellationToken)
     {
-        var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         var data = await connection.QuerySingleOrDefaultAsync<Models.Troll>(
@@ -40,7 +40,7 @@ internal class ProfilesRepository
 
     private static async Task RefreshTrollAsync(NpgsqlDataSource dataSource, Models.Troll troll, CancellationToken cancellationToken)
     {
-        var connection = dataSource.CreateConnection();
+        await using var connection = dataSource.CreateConnection();
         await connection.OpenAsync(cancellationToken);
 
         await connection.ExecuteAsync

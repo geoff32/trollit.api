@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 .sonarqube
 
 .env
+.idea
+
+*.received.*

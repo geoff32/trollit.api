@@ -21,9 +21,14 @@ public class MockAuthenticationHandler(
         if (contextAccessor.HttpContext?.Request.Headers.TryGetValue("Mock-Authenticated-UserId", out var users) ?? false)
         {
             var user = users.FirstOrDefault();
-            if (user != null && Guid.TryParse(user, out var userId) && mockAuthenticatedUsersRepository.IsUserAuthenticated(userId))
+            if (user != null && Guid.TryParse(user, out var userId) && mockAuthenticatedUsersRepository.IsUserAuthenticated(userId, out var appUser))
             {
-                var claims = new[] { new Claim(ClaimTypes.Name, userId.ToString()) };
+                var claims = new[]
+                {
+                     new Claim(ClaimTypes.Name, appUser.TrollName),
+                     new Claim(ClaimTypes.NameIdentifier, appUser.TrollId.ToString()),
+                     new Claim(ClaimTypes.UserData, userId.ToString()),
+                };
                 var identity = new ClaimsIdentity(claims, SchemeName);
                 var principal = new ClaimsPrincipal(identity);
                 var ticket = new AuthenticationTicket(principal, SchemeName);

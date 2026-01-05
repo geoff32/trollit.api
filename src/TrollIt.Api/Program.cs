@@ -1,17 +1,22 @@
 using Microsoft.AspNetCore.Localization;
 using Serilog;
 using TrollIt.Api.Account.DependencyInjection;
+using TrollIt.Api.Authorization.DependencyInjection;
 using TrollIt.Api.Exceptions;
 using TrollIt.Infrastructure;
 using TrollIt.Infrastructure.Mountyhall;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, services, configuration) => configuration
     .ReadFrom.Configuration(context.Configuration)
     .ReadFrom.Services(services)
     .Enrich.FromLogContext()
     .Filter.With<ManagedExceptionLogEventFilter>()
-    .WriteTo.Console());
+    .WriteTo.Console(), writeToProviders: true);
+
+builder.AddServiceDefaults();
 
 builder.Services.AddControllers();
 
@@ -19,6 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddWebApiAuthentication();
+builder.Services.AddWebApiAuthorization();
 
 builder.Services.AddDomain();
 builder.Services.AddApplication();
@@ -45,16 +51,19 @@ app.UseRequestLocalization();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
+app.MapDefaultEndpoints();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
 // Make the implicit Program class public so test projects can access it
 public partial class Program { }
